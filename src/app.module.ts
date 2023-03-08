@@ -3,7 +3,12 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import * as process from 'process';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { PuzzleModule } from './puzzle/puzzle.module';
+import { MessageModule } from './message/message.module';
 import * as Joi from 'joi';
+import { User } from './auth/entity/user.entity';
+import { Puzzle } from './puzzle/entity/puzzle.entity';
+import { Message } from './message/entity/message.entity';
 
 @Module({
   imports: [
@@ -19,6 +24,9 @@ import * as Joi from 'joi';
         DB_PASSWORD: Joi.string().required(),
         DB_SCHEMA: Joi.string().required(),
         JWT_SECRET: Joi.string().required(),
+        GOOGLE_CLIENT_ID: Joi.string().required(),
+        GOOGLE_CLIENT_SECRET: Joi.string().required(),
+        GOOGLE_CALLBACK_URL: Joi.string().required(),
       }),
     }),
     TypeOrmModule.forRootAsync({
@@ -30,11 +38,13 @@ import * as Joi from 'joi';
         username: configService.get('DB_USER'),
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_SCHEMA'),
-        entities: [__dirname + '/../!**!/!*.entity.{js,ts}'],
+        entities: [User, Puzzle, Message],
         synchronize: true,
       }),
     }),
     AuthModule,
+    PuzzleModule,
+    MessageModule,
   ],
   controllers: [],
   providers: [],
