@@ -16,21 +16,16 @@ export class AuthService {
 
   async findUserByEmailOrSave(userDto: UserDto): Promise<User> {
     const { provider, email, birthdate } = userDto;
-    const user = await this.userRepository.findOne({
+    // 이미 등록된 유저인 경우 바로 반환
+    const existingUser = await this.userRepository.findOne({
       where: { provider, email },
     });
+    if (existingUser) return existingUser;
 
-    if (user) {
-      return user;
-    }
-    console.log(birthdate);
-    const newUser = this.userRepository.create({
-      provider,
-      email,
-      birthdate,
-    });
-    await this.userRepository.save(newUser);
-    return newUser;
+    // 새로운 유저 생성 및 저장
+    return this.userRepository.save(
+      this.userRepository.create({ provider, email, birthdate }),
+    );
   }
 
   createToken(user: User): { accessToken: string; refreshToken: string } {
@@ -47,16 +42,15 @@ export class AuthService {
         provider: user.provider,
         email: user.email,
       },
-      { expiresIn: '3d' },
+      { expiresIn: '1d' },
     );
     return { accessToken, refreshToken };
   }
 
   async updateHashedRefreshToken(
-    id: number,
+    user: User,
     refreshToken: string,
   ): Promise<void> {
-    const user = await this.userRepository.findOne({ where: { id } });
     const salt = bcrypt.genSaltSync();
     user.hashedRefreshToken = bcrypt.hashSync(refreshToken, salt);
     await this.userRepository.save(user);
