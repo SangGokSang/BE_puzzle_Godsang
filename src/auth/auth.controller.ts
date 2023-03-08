@@ -11,9 +11,6 @@ export class AuthController {
   async googleLogin(
     @Req() req,
   ): Promise<{ accessToken: string; refreshToken: string }> {
-    const user = await this.authService.findUserByEmailOrSave(req.user);
-    const { accessToken, refreshToken } = this.authService.createToken(user);
-    await this.authService.updateHashedRefreshToken(user, refreshToken);
-    return { accessToken, refreshToken };
+    return await this.authService.loginOrSignIn(req.user);
   }
 }

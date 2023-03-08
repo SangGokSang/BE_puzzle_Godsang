@@ -14,7 +14,14 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async findUserByEmailOrSave(userDto: UserDto): Promise<User> {
+  loginOrSignIn = async (userDto: UserDto) => {
+    const user = await this.findUserByEmailOrSave(userDto);
+    const token = this.createToken(user);
+    await this.updateHashedRefreshToken(user, token.refreshToken);
+    return token;
+  };
+
+  private findUserByEmailOrSave = async (userDto: UserDto): Promise<User> => {
     const { provider, email, birthdate } = userDto;
     // 이미 등록된 유저인 경우 바로 반환
     const existingUser = await this.userRepository.findOne({
@@ -26,9 +33,14 @@ export class AuthService {
     return this.userRepository.save(
       this.userRepository.create({ provider, email, birthdate }),
     );
-  }
+  };
 
-  createToken(user: User): { accessToken: string; refreshToken: string } {
+  private createToken = (
+    user: User,
+  ): {
+    accessToken: string;
+    refreshToken: string;
+  } => {
     const accessToken = this.jwtService.sign(
       {
         id: user.id,
@@ -45,14 +57,14 @@ export class AuthService {
       { expiresIn: '1d' },
     );
     return { accessToken, refreshToken };
-  }
+  };
 
-  async updateHashedRefreshToken(
+  private updateHashedRefreshToken = async (
     user: User,
     refreshToken: string,
-  ): Promise<void> {
+  ): Promise<void> => {
     const salt = bcrypt.genSaltSync();
     user.hashedRefreshToken = bcrypt.hashSync(refreshToken, salt);
     await this.userRepository.save(user);
-  }
+  };
 }
