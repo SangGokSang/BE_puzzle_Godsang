@@ -22,7 +22,7 @@ export class AuthService {
   };
 
   private findUserByEmailOrSave = async (userDto: UserDto): Promise<User> => {
-    const { provider, email, birthdate } = userDto;
+    const { provider, providerId, nickname, email } = userDto;
     // 이미 등록된 유저인 경우 바로 반환
     const existingUser = await this.userRepository.findOne({
       where: { provider, email },
@@ -31,7 +31,7 @@ export class AuthService {
 
     // 새로운 유저 생성 및 저장
     return this.userRepository.save(
-      this.userRepository.create({ provider, email, birthdate }),
+      this.userRepository.create({ provider, providerId, nickname, email }),
     );
   };
 

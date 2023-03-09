@@ -23,8 +23,9 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
   ): Promise<UserDto> {
     return {
       provider: OAuthProvider.GOOGLE,
+      providerId: profile.id,
+      nickname: profile.displayName,
       email: profile.emails[0].value,
-      birthdate: null,
     };
   }
 }

@@ -12,7 +12,7 @@ import { Puzzle } from '../../puzzle/entity/puzzle.entity';
 import { OAuthProvider } from './provider.enum';
 
 @Entity()
-@Unique(['provider', 'email'])
+@Unique(['provider', 'providerId'])
 export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
   id!: number;
@@ -21,7 +21,10 @@ export class User extends BaseEntity {
   provider!: OAuthProvider;
 
   @Column({ type: 'varchar', nullable: false })
-  email!: string;
+  providerId!: string;
+
+  @Column({ type: 'varchar', default: null })
+  email: string;
 
   @Column({ type: 'varchar', length: 15, default: null })
   nickname?: string;

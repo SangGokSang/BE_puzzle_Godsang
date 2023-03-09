@@ -8,7 +8,15 @@ export class AuthController {
 
   @Get('/login/google')
   @UseGuards(AuthGuard('google'))
-  async googleLogin(
+  async loginGoogle(
+    @Req() req,
+  ): Promise<{ accessToken: string; refreshToken: string }> {
+    return await this.authService.loginOrSignIn(req.user);
+  }
+
+  @Get('/login/kakao')
+  @UseGuards(AuthGuard('kakao'))
+  async loginKaKao(
     @Req() req,
   ): Promise<{ accessToken: string; refreshToken: string }> {
     return await this.authService.loginOrSignIn(req.user);
