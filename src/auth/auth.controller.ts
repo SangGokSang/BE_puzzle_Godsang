@@ -21,4 +21,20 @@ export class AuthController {
   ): Promise<{ accessToken: string; refreshToken: string }> {
     return await this.authService.loginOrSignIn(req.user);
   }
+
+  @Get('/login/naver')
+  @UseGuards(AuthGuard('naver'))
+  async loginNaver(
+    @Req() req,
+  ): Promise<{ accessToken: string; refreshToken: string }> {
+    return await this.authService.loginOrSignIn(req.user);
+  }
+
+  @Get('/login/facebook')
+  @UseGuards(AuthGuard('facebook'))
+  async loginFacebook(
+    @Req() req,
+  ): Promise<{ accessToken: string; refreshToken: string }> {
+    return await this.authService.loginOrSignIn(req.user);
+  }
 }

@@ -7,6 +7,8 @@ import { User } from './entity/user.entity';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { KakaoStrategy } from './strategy/kakao.strategy';
+import { NaverStrategy } from './strategy/naver.strategy';
+import { FacebookStrategy } from './strategy/facebook.strategy';
 
 @Module({
   imports: [
@@ -19,6 +21,12 @@ import { KakaoStrategy } from './strategy/kakao.strategy';
     }),
   ],
   controllers: [AuthController],
-  providers: [GoogleStrategy, KakaoStrategy, AuthService],
+  providers: [
+    GoogleStrategy,
+    KakaoStrategy,
+    NaverStrategy,
+    FacebookStrategy,
+    AuthService,
+  ],
 })
 export class AuthModule {}

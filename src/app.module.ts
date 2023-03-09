@@ -29,6 +29,8 @@ import { Message } from './message/entity/message.entity';
         GOOGLE_CALLBACK_URL: Joi.string().required(),
         KAKAO_CLIENT_ID: Joi.string().required(),
         KAKAO_CALLBACK_URL: Joi.string().required(),
+        NAVER_CLIENT_ID: Joi.string().required(),
+        NAVER_CALLBACK_URL: Joi.string().required(),
       }),
     }),
     TypeOrmModule.forRootAsync({
