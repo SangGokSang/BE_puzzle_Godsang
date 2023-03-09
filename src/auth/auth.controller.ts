@@ -1,4 +1,4 @@
-import { Controller, Get, Req, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 
@@ -36,5 +36,14 @@ export class AuthController {
     @Req() req,
   ): Promise<{ accessToken: string; refreshToken: string }> {
     return await this.authService.loginOrSignIn(req.user);
+  }
+
+  @Post('refresh-token')
+  @UseGuards(AuthGuard('refresh-token'))
+  async refreshToken(
+    @Req() req,
+  ): Promise<{ accessToken: string; refreshToken: string }> {
+    const { provider, providerId } = req.user;
+    return await this.authService.refreshToken(provider, providerId);
   }
 }

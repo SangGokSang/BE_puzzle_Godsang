@@ -9,6 +9,8 @@ import { ConfigService } from '@nestjs/config';
 import { KakaoStrategy } from './strategy/kakao.strategy';
 import { NaverStrategy } from './strategy/naver.strategy';
 import { FacebookStrategy } from './strategy/facebook.strategy';
+import { AccessTokenStrategy } from './strategy/access-token.strategy';
+import { RefreshTokenStrategy } from './strategy/refresh-token.strategy';
 
 @Module({
   imports: [
@@ -26,6 +28,8 @@ import { FacebookStrategy } from './strategy/facebook.strategy';
     KakaoStrategy,
     NaverStrategy,
     FacebookStrategy,
+    AccessTokenStrategy,
+    RefreshTokenStrategy,
     AuthService,
   ],
 })

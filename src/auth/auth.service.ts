@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entity/user.entity';
 import { Repository } from 'typeorm';
@@ -14,33 +14,44 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  loginOrSignIn = async (userDto: UserDto) => {
+  async loginOrSignIn(userDto: UserDto) {
     const user = await this.findUserByEmailOrSave(userDto);
     const token = this.createToken(user);
     await this.updateHashedRefreshToken(user, token.refreshToken);
     return token;
-  };
+  }
 
-  private findUserByEmailOrSave = async (userDto: UserDto): Promise<User> => {
+  async refreshToken(
+    provider: string,
+    providerId: string,
+  ): Promise<{ accessToken: string; refreshToken: string }> {
+    const user = await this.userRepository.findOne({
+      where: { provider, providerId },
+    });
+    if (!user) {
+      throw new UnauthorizedException();
+    }
+    const token = this.createToken(user);
+    await this.updateHashedRefreshToken(user, token.refreshToken);
+    return token;
+  }
+
+  private async findUserByEmailOrSave(userDto: UserDto): Promise<User> {
     const { provider, providerId, nickname, email } = userDto;
-    // 이미 등록된 유저인 경우 바로 반환
     const existingUser = await this.userRepository.findOne({
       where: { provider, email },
     });
     if (existingUser) return existingUser;
 
-    // 새로운 유저 생성 및 저장
     return this.userRepository.save(
       this.userRepository.create({ provider, providerId, nickname, email }),
     );
-  };
+  }
 
-  private createToken = (
-    user: User,
-  ): {
+  private createToken(user: User): {
     accessToken: string;
     refreshToken: string;
-  } => {
+  } {
     const accessToken = this.jwtService.sign(
       {
         id: user.id,
@@ -57,14 +68,14 @@ export class AuthService {
       { expiresIn: '1d' },
     );
     return { accessToken, refreshToken };
-  };
+  }
 
-  private updateHashedRefreshToken = async (
+  private async updateHashedRefreshToken(
     user: User,
     refreshToken: string,
-  ): Promise<void> => {
+  ): Promise<void> {
     const salt = bcrypt.genSaltSync();
     user.hashedRefreshToken = bcrypt.hashSync(refreshToken, salt);
     await this.userRepository.save(user);
-  };
+  }
 }

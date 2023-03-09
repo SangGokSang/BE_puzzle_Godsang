@@ -9,6 +9,7 @@ import * as Joi from 'joi';
 import { User } from './auth/entity/user.entity';
 import { Puzzle } from './puzzle/entity/puzzle.entity';
 import { Message } from './message/entity/message.entity';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -49,6 +50,7 @@ import { Message } from './message/entity/message.entity';
     AuthModule,
     PuzzleModule,
     MessageModule,
+    UserModule,
   ],
   controllers: [],
   providers: [],
