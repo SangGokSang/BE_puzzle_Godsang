@@ -52,7 +52,7 @@ export class AuthService {
     const refreshToken = this.jwtService.sign(
       {
         provider: user.provider,
-        email: user.email,
+        providerId: user.providerId,
       },
       { expiresIn: '1d' },
     );
