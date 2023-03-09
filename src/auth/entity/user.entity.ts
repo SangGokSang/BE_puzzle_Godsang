@@ -9,7 +9,6 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Puzzle } from '../../puzzle/entity/puzzle.entity';
-import { OAuthProvider } from './provider.enum';
 
 @Entity()
 @Unique(['provider', 'providerId'])
@@ -17,8 +16,8 @@ export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @Column({ type: 'enum', enum: OAuthProvider, nullable: false })
-  provider!: OAuthProvider;
+  @Column({ type: 'varchar', length: 25, nullable: false })
+  provider!: string;
 
   @Column({ type: 'varchar', nullable: false })
   providerId!: string;
@@ -26,7 +25,7 @@ export class User extends BaseEntity {
   @Column({ type: 'varchar', default: null })
   email: string;
 
-  @Column({ type: 'varchar', length: 15, default: null })
+  @Column({ type: 'varchar', length: 25, default: null })
   nickname?: string;
 
   @Column({ type: 'timestamp', default: null })
