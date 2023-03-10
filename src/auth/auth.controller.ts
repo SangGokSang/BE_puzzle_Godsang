@@ -43,7 +43,6 @@ export class AuthController {
   async refreshToken(
     @Req() req,
   ): Promise<{ accessToken: string; refreshToken: string }> {
-    const { provider, providerId } = req.user;
-    return await this.authService.refreshToken(provider, providerId);
+    return await this.authService.refreshToken(req.user);
   }
 }

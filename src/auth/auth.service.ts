@@ -1,10 +1,11 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entity/user.entity';
 import { Repository } from 'typeorm';
 import { UserDto } from './dto/user.dto';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
+import { DeletedUserException } from './exception/deleted-user.exception';
 
 @Injectable()
 export class AuthService {
@@ -15,37 +16,30 @@ export class AuthService {
   ) {}
 
   async loginOrSignIn(userDto: UserDto) {
-    const user = await this.findUserByEmailOrSave(userDto);
+    const user = await this.findUserOrSave(userDto);
     const token = this.createToken(user);
     await this.updateHashedRefreshToken(user, token.refreshToken);
     return token;
   }
 
   async refreshToken(
-    provider: string,
-    providerId: string,
+    user: User,
   ): Promise<{ accessToken: string; refreshToken: string }> {
-    const user = await this.userRepository.findOne({
-      where: { provider, providerId },
-    });
-    if (!user) {
-      throw new UnauthorizedException();
-    }
     const token = this.createToken(user);
     await this.updateHashedRefreshToken(user, token.refreshToken);
     return token;
   }
 
-  private async findUserByEmailOrSave(userDto: UserDto): Promise<User> {
-    const { provider, providerId, nickname, email } = userDto;
+  private async findUserOrSave(userDto: UserDto) {
+    const { provider, providerId } = userDto;
     const existingUser = await this.userRepository.findOne({
-      where: { provider, email },
+      where: { provider, providerId },
+      withDeleted: true,
     });
-    if (existingUser) return existingUser;
-
-    return this.userRepository.save(
-      this.userRepository.create({ provider, providerId, nickname, email }),
-    );
+    if (existingUser?.deleteAt) {
+      throw new DeletedUserException();
+    }
+    return existingUser || this.userRepository.create(userDto).save();
   }
 
   private createToken(user: User): {
@@ -54,7 +48,7 @@ export class AuthService {
   } {
     const accessToken = this.jwtService.sign(
       {
-        id: user.id,
+        userId: user.id,
         nickname: user.nickname,
         birthdate: user.birthdate,
       },
