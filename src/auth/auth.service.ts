@@ -19,7 +19,7 @@ export class AuthService {
   async loginOrSignIn(userDto: OauthUserDto) {
     const user = await this.findUserOrSave(userDto);
     const token = this.createToken(user);
-    await this.updateHashedRefreshToken(user, token.refreshToken);
+    await this.updateHashedRefreshToken(user.id, token.refreshToken);
     return token;
   }
 
@@ -37,7 +37,7 @@ export class AuthService {
       );
     }
     const token = this.createToken(user);
-    await this.updateHashedRefreshToken(user, token.refreshToken);
+    await this.updateHashedRefreshToken(user.id, token.refreshToken);
     return token;
   }
 
@@ -66,11 +66,11 @@ export class AuthService {
   }
 
   private async updateHashedRefreshToken(
-    user: User,
+    userId: number,
     refreshToken: string,
   ): Promise<void> {
     const salt = bcrypt.genSaltSync();
-    user.hashedRefreshToken = bcrypt.hashSync(refreshToken, salt);
-    await this.userRepository.save(user);
+    const hashedRefreshToken = bcrypt.hashSync(refreshToken, salt);
+    await this.userRepository.update({ id: userId }, { hashedRefreshToken });
   }
 }

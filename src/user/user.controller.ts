@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   Patch,
   UseGuards,
   ValidationPipe,
@@ -10,10 +11,17 @@ import { UserService } from './user.service';
 import { UserUpdateDto } from './dto/user-update.dto';
 import { ParseUserUpdateDtoPipe } from './pipe/parse-date.pipe';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
+import { UserKeyDto } from './dto/user-key.dto';
 
 @Controller('/api/user')
 export class UserController {
   constructor(private userService: UserService) {}
+
+  @Get('key')
+  @UseGuards(JwtAuthGuard)
+  async getUser(@GetUserId() userId): Promise<UserKeyDto> {
+    return await this.userService.getUserKeyCount(userId);
+  }
 
   @Patch()
   @UseGuards(JwtAuthGuard)

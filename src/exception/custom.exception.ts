@@ -5,6 +5,7 @@ export enum ExceptionCode {
   EXPIRED_TOKEN = 'EXPIRED_TOKEN',
   INTERNAL_SERVER_ERROR = 'INTERNAL_SERVER_ERROR',
   INVALID_USER = 'INVALID_USER',
+  MESSAGE_FULL = 'MESSAGE_FULL',
 }
 
 export class CustomException extends HttpException {

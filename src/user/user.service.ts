@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../auth/entity/user.entity';
 import { UserUpdateDto } from './dto/user-update.dto';
+import { UserKeyDto } from './dto/user-key.dto';
 
 @Injectable()
 export class UserService {
@@ -11,8 +12,15 @@ export class UserService {
     private userRepository: Repository<User>,
   ) {}
 
+  async getUserKeyCount(userId): Promise<UserKeyDto> {
+    const user = await this.userRepository.findOneOrFail({
+      where: { id: userId },
+    });
+    return { keyCount: user.keyCount };
+  }
+
   async withdrawUser(userId: number): Promise<void> {
-    await this.userRepository.findOneByOrFail({ id: userId });
+    await this.userRepository.findOneOrFail({ where: { id: userId } });
     await this.userRepository.softDelete(userId);
   }
 

@@ -6,10 +6,11 @@ import { Puzzle } from './entity/puzzle.entity';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { User } from '../auth/entity/user.entity';
+import { Message } from './entity/message.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Puzzle, User]),
+    TypeOrmModule.forFeature([Puzzle, User, Message]),
     JwtModule.registerAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({

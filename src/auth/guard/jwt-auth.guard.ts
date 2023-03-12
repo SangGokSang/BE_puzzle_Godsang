@@ -27,15 +27,15 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       );
     }
     const token = authorization.replace('Bearer ', '');
-    const { userId, isDeleted } = this.validateToken(token);
-    if (isDeleted && request.url !== '/api/user/restore') {
+    const user = this.validateToken(token);
+    if (user.isDeleted && request.url !== '/api/user/restore') {
       throw new CustomException(
         ExceptionCode.INVALID_USER,
         `탈퇴한 유저입니다.`,
         403,
       );
     }
-    request.userId = userId;
+    request.user = user;
     return true;
   }
 
