@@ -8,7 +8,6 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Puzzle } from './puzzle.entity';
-import { User } from '../../auth/entity/user.entity';
 import { MessageDto } from '../dto/message.dto';
 
 @Entity()
