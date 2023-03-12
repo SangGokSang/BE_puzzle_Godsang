@@ -47,12 +47,7 @@ export class UserService {
       );
     }
     const keyCount = user.keyCount - 1;
-    await this.userRepository
-      .createQueryBuilder()
-      .update('user')
-      .set({ keyCount })
-      .where({ id: userId })
-      .execute();
+    await this.userRepository.update({ id: userId }, { keyCount });
     return { keyCount };
   }
 }
