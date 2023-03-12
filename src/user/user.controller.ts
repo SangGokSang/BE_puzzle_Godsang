@@ -17,15 +17,9 @@ import { UserKeyDto } from './dto/user-key.dto';
 export class UserController {
   constructor(private userService: UserService) {}
 
-  @Get('key')
-  @UseGuards(JwtAuthGuard)
-  async getUser(@GetUserId() userId): Promise<UserKeyDto> {
-    return await this.userService.getUserKeyCount(userId);
-  }
-
   @Patch()
   @UseGuards(JwtAuthGuard)
-  async modifyUser(
+  async updateUser(
     @GetUserId() userId: number,
     @Body(ParseUserUpdateDtoPipe, ValidationPipe) userUpdateDto: UserUpdateDto,
   ) {
@@ -42,5 +36,17 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   async restoreUser(@GetUserId() userId: number): Promise<void> {
     await this.userService.restoreUser(userId);
+  }
+
+  @Get('/key')
+  @UseGuards(JwtAuthGuard)
+  async getUser(@GetUserId() userId): Promise<UserKeyDto> {
+    return await this.userService.getUserKeyCount(userId);
+  }
+
+  @Patch('/key')
+  @UseGuards(JwtAuthGuard)
+  async updateUserKeyCount(@GetUserId() userId: number): Promise<UserKeyDto> {
+    return await this.userService.updateUserKeyCount(userId);
   }
 }

@@ -6,6 +6,7 @@ export enum ExceptionCode {
   INTERNAL_SERVER_ERROR = 'INTERNAL_SERVER_ERROR',
   INVALID_USER = 'INVALID_USER',
   MESSAGE_FULL = 'MESSAGE_FULL',
+  NO_KEY = 'NO_KEY',
 }
 
 export class CustomException extends HttpException {

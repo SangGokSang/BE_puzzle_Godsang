@@ -18,10 +18,12 @@ export class CustomExceptionFilter implements ExceptionFilter {
     const request = ctx.getRequest<Request>();
     const status = exception.getStatus();
 
-    this.logger.error(exception);
+    this.logger.error(
+      `HTTP: [${request.method} ${request.url}] HOSTNAME: [${request.hostname}] IP: [${request.ip}] EXCEPTION CODE: [${exception.code}]`,
+    );
 
     response.status(status).json({
-      code: exception.code ?? ExceptionCode.INTERNAL_SERVER_ERROR,
+      code: exception.code,
       message: exception.message,
       time: new Date(),
       path: request.url,
