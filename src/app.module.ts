@@ -4,13 +4,11 @@ import { AuthModule } from './auth/auth.module';
 import * as process from 'process';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PuzzleModule } from './puzzle/puzzle.module';
-import { MessageModule } from './message/message.module';
 import * as Joi from 'joi';
 import { User } from './auth/entity/user.entity';
 import { Puzzle } from './puzzle/entity/puzzle.entity';
-import { Message } from './message/entity/message.entity';
+import { Message } from './puzzle/entity/message.entity';
 import { UserModule } from './user/user.module';
-import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -46,17 +44,11 @@ import { JwtModule } from '@nestjs/jwt';
         database: configService.get('DB_SCHEMA'),
         entities: [User, Puzzle, Message],
         synchronize: true,
-      }),
-    }),
-    JwtModule.registerAsync({
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        secret: configService.get('JWT_SECRET'),
+        logging: true,
       }),
     }),
     AuthModule,
     PuzzleModule,
-    MessageModule,
     UserModule,
   ],
   controllers: [],

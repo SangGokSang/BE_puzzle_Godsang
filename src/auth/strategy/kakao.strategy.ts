@@ -2,7 +2,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Profile, Strategy } from 'passport-kakao';
 import { ConfigService } from '@nestjs/config';
 import { Injectable } from '@nestjs/common';
-import { UserDto } from '../dto/user.dto';
+import { OauthUserDto } from '../dto/oauth-user.dto';
 
 @Injectable()
 export class KakaoStrategy extends PassportStrategy(Strategy, 'kakao') {
@@ -17,7 +17,7 @@ export class KakaoStrategy extends PassportStrategy(Strategy, 'kakao') {
     accessToke: string,
     refreshToken: string,
     profile: Profile,
-  ): Promise<UserDto> {
+  ): Promise<OauthUserDto> {
     const kakaoAccount = profile._json.kakao_account;
     return {
       provider: profile.provider,

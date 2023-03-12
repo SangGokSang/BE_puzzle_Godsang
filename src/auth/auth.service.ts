@@ -2,7 +2,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entity/user.entity';
 import { Repository } from 'typeorm';
-import { UserDto } from './dto/user.dto';
+import { OauthUserDto } from './dto/oauth-user.dto';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
 import { JwtPayload } from './dto/jwt-payload';
@@ -15,7 +15,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async loginOrSignIn(userDto: UserDto) {
+  async loginOrSignIn(userDto: OauthUserDto) {
     const user = await this.findUserOrSave(userDto);
     const token = this.createToken(user);
     await this.updateHashedRefreshToken(user, token.refreshToken);
@@ -36,7 +36,7 @@ export class AuthService {
     return token;
   }
 
-  private async findUserOrSave(userDto: UserDto) {
+  private async findUserOrSave(userDto: OauthUserDto) {
     const { provider, providerId } = userDto;
     const existingUser = await this.userRepository.findOne({
       where: { provider, providerId },
@@ -52,7 +52,7 @@ export class AuthService {
     const payload: JwtPayload = {
       userId: user.id,
       nickname: user.nickname,
-      birthdate: user.birthdate,
+      birthdate: user.birthdate.getTime(),
       isDeleted: !!user.deleteAt,
     };
     const accessToken = this.jwtService.sign(payload, { expiresIn: '1h' });

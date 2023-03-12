@@ -2,6 +2,7 @@ import {
   BaseEntity,
   Column,
   CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   ManyToOne,
   OneToMany,
@@ -9,7 +10,8 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { User } from '../../auth/entity/user.entity';
-import { Message } from '../../message/entity/message.entity';
+import { Message } from './message.entity';
+import { PuzzleDto } from '../dto/puzzle.dto';
 
 @Entity()
 export class Puzzle extends BaseEntity {
@@ -18,19 +20,33 @@ export class Puzzle extends BaseEntity {
 
   @Column({ type: 'varchar', length: 40, nullable: false })
   title: string;
+  @Column({ type: 'varchar', length: 20, nullable: false })
+  category: string;
 
   @ManyToOne(() => User, (user) => user.puzzles, { eager: false })
   user: User;
 
   @OneToMany(() => Message, (message) => message.puzzle, {
-    eager: false,
+    eager: true,
     cascade: true,
   })
-  messages: Message;
+  messages: Message[];
 
   @CreateDateColumn({ type: 'timestamp' })
   createAt: Date;
 
   @UpdateDateColumn({ type: 'timestamp' })
   updatedAt: Date;
+
+  @DeleteDateColumn({ type: 'timestamp' })
+  deletedAt: Date;
+
+  toDto(): PuzzleDto {
+    return {
+      id: this.id,
+      category: this.category,
+      title: this.title,
+      messages: this.messages.map((messageEntity) => messageEntity.toDto()),
+    };
+  }
 }

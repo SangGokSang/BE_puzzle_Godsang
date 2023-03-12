@@ -2,7 +2,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-facebook';
 import { ConfigService } from '@nestjs/config';
 import { Profile } from 'passport-kakao';
-import { UserDto } from '../dto/user.dto';
+import { OauthUserDto } from '../dto/oauth-user.dto';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
@@ -19,7 +19,7 @@ export class FacebookStrategy extends PassportStrategy(Strategy, 'facebook') {
     accessToke: string,
     refreshToken: string,
     profile: Profile,
-  ): Promise<UserDto> {
+  ): Promise<OauthUserDto> {
     return {
       provider: profile.provider,
       providerId: profile.id,

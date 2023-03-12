@@ -3,11 +3,21 @@ import { PuzzleController } from './puzzle.controller';
 import { PuzzleService } from './puzzle.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Puzzle } from './entity/puzzle.entity';
-import { JwtService } from '@nestjs/jwt';
+import { JwtModule } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
+import { User } from '../auth/entity/user.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Puzzle])],
+  imports: [
+    TypeOrmModule.forFeature([Puzzle, User]),
+    JwtModule.registerAsync({
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        secret: configService.get('JWT_SECRET'),
+      }),
+    }),
+  ],
   controllers: [PuzzleController],
-  providers: [PuzzleService, JwtService],
+  providers: [PuzzleService],
 })
 export class PuzzleModule {}

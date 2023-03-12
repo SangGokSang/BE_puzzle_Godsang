@@ -1,6 +1,6 @@
 export class JwtPayload {
   userId: number;
   nickname: string;
-  birthdate: Date;
+  birthdate: number;
   isDeleted: boolean;
 }

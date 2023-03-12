@@ -1,4 +1,4 @@
-export interface UserDto {
+export interface OauthUserDto {
   provider: string;
   providerId: string;
   nickname: string;

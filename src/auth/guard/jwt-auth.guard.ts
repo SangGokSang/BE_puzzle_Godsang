@@ -38,13 +38,11 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
         secret: this.configService.get('JWT_SECRET'),
       });
     } catch (e) {
-      console.log(e);
       switch (e.message) {
-        case 'INVALID_TOKEN':
-        case 'TOKEN_IS_ARRAY':
-        case 'NO_USER':
+        case 'invalid token':
+        case 'no user':
           throw new HttpException('유효하지 않은 토큰입니다.', 401);
-        case 'EXPIRED_TOKEN':
+        case 'jwt expired':
           throw new HttpException('토큰이 만료되었습니다.', 410);
         default:
           throw new HttpException('서버 오류입니다.', 500);
