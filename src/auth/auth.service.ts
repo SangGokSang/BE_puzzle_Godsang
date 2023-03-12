@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entity/user.entity';
 import { Repository } from 'typeorm';
@@ -6,6 +6,7 @@ import { OauthUserDto } from './dto/oauth-user.dto';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
 import { JwtPayload } from './dto/jwt-payload';
+import { CustomException, ExceptionCode } from '../exception/custom.exception';
 
 @Injectable()
 export class AuthService {
@@ -29,7 +30,11 @@ export class AuthService {
     const user = await this.userRepository.findOneByOrFail({ id: userId });
     const refreshToken = authorization.replace('Bearer ', '');
     if (!(await bcrypt.compare(refreshToken, user.hashedRefreshToken))) {
-      throw new UnauthorizedException('잘못된 토큰입니다.');
+      throw new CustomException(
+        ExceptionCode.INVALID_TOKEN,
+        'Refresh Token 비교 중에 예외가 발생했습니다.',
+        HttpStatus.UNAUTHORIZED,
+      );
     }
     const token = this.createToken(user);
     await this.updateHashedRefreshToken(user, token.refreshToken);

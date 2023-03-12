@@ -9,6 +9,8 @@ import { User } from './auth/entity/user.entity';
 import { Puzzle } from './puzzle/entity/puzzle.entity';
 import { Message } from './puzzle/entity/message.entity';
 import { UserModule } from './user/user.module';
+import { APP_FILTER } from '@nestjs/core';
+import { CustomExceptionFilter } from './exception/custom.exception-filter';
 
 @Module({
   imports: [
@@ -52,6 +54,6 @@ import { UserModule } from './user/user.module';
     UserModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [{ provide: APP_FILTER, useClass: CustomExceptionFilter }],
 })
 export class AppModule {}

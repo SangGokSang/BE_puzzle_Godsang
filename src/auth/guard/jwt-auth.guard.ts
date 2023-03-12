@@ -1,12 +1,11 @@
-import {
-  ExecutionContext,
-  HttpException,
-  HttpStatus,
-  Injectable,
-} from '@nestjs/common';
+import { ExecutionContext, HttpStatus, Injectable } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import {
+  CustomException,
+  ExceptionCode,
+} from '../../exception/custom.exception';
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
@@ -21,12 +20,20 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     const request = context.switchToHttp().getRequest();
     const { authorization } = request.headers;
     if (authorization === undefined) {
-      throw new HttpException('Token 전송 안됨', HttpStatus.UNAUTHORIZED);
+      throw new CustomException(
+        ExceptionCode.INVALID_TOKEN,
+        'Authorization 헤더가 비어 있습니다.',
+        HttpStatus.BAD_REQUEST,
+      );
     }
     const token = authorization.replace('Bearer ', '');
     const { userId, isDeleted } = this.validateToken(token);
     if (isDeleted && request.url !== '/api/user/restore') {
-      throw new HttpException(`삭제된 유저입니다.`, 403);
+      throw new CustomException(
+        ExceptionCode.INVALID_USER,
+        `탈퇴한 유저입니다.`,
+        403,
+      );
     }
     request.userId = userId;
     return true;
@@ -40,12 +47,23 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     } catch (e) {
       switch (e.message) {
         case 'invalid token':
-        case 'no user':
-          throw new HttpException('유효하지 않은 토큰입니다.', 401);
+          throw new CustomException(
+            ExceptionCode.INVALID_TOKEN,
+            '잘못 된 토큰입니다.',
+            HttpStatus.BAD_REQUEST,
+          );
         case 'jwt expired':
-          throw new HttpException('토큰이 만료되었습니다.', 410);
+          throw new CustomException(
+            ExceptionCode.EXPIRED_TOKEN,
+            '만료된 토큰입니다.',
+            410,
+          );
         default:
-          throw new HttpException('서버 오류입니다.', 500);
+          throw new CustomException(
+            ExceptionCode.INTERNAL_SERVER_ERROR,
+            '서버 오류입니다.',
+            500,
+          );
       }
     }
   }
