@@ -7,6 +7,7 @@ export enum ExceptionCode {
   INVALID_USER = 'INVALID_USER',
   MESSAGE_FULL = 'MESSAGE_FULL',
   NO_KEY = 'NO_KEY',
+  MESSAGE_ALREADY_OPEN = 'MESSAGE_ALREADY_OPEN',
 }
 
 export class CustomException extends HttpException {

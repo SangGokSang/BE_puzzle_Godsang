@@ -63,4 +63,36 @@ export class PuzzleService {
       })
       .save();
   }
+
+  async readMessage(userId: number, puzzleId: number, messageId: number) {
+    const message = await this.messageRepository
+      .createQueryBuilder()
+      .where({ id: messageId })
+      .getOneOrFail();
+
+    if (message.isOpened) {
+      throw new CustomException(
+        ExceptionCode.MESSAGE_ALREADY_OPEN,
+        '메세지가 이미 열린 상태입니다.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    const user = await this.userRepository.findOneOrFail({
+      where: { id: userId },
+    });
+
+    if (user.keyCount === 0) {
+      throw new CustomException(
+        ExceptionCode.NO_KEY,
+        '사용할 수 있는 열쇠가 없습니다',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    const keyCount = user.keyCount - 1;
+    await this.userRepository.manager.transaction(async (manager) => {
+      await manager.update(User, userId, { keyCount });
+      await manager.update(Message, messageId, { isOpened: true });
+    });
+    return { keyCount };
+  }
 }

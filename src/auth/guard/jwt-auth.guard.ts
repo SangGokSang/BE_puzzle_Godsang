@@ -31,7 +31,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     if (user.isDeleted && request.url !== '/api/user/restore') {
       throw new CustomException(
         ExceptionCode.INVALID_USER,
-        `탈퇴한 유저입니다.`,
+        `탈퇴한 사용자입니다.`,
         403,
       );
     }

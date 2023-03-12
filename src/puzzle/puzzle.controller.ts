@@ -4,6 +4,7 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
   UseGuards,
   ValidationPipe,
@@ -50,5 +51,15 @@ export class PuzzleController {
       puzzleId,
       messageCreateDto,
     );
+  }
+
+  @Patch(':puzzleId/message/:messageId')
+  @UseGuards(JwtAuthGuard)
+  async readMessage(
+    @GetUserId() userId: number,
+    @Param('puzzleId', ParseIntPipe) puzzleId: number,
+    @Param('messageId', ParseIntPipe) messageId: number,
+  ) {
+    await this.puzzleService.readMessage(userId, puzzleId, messageId);
   }
 }
