@@ -1,6 +1,8 @@
 import { Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
+import { GetUserId } from './decorator/get-user-id.decorator';
+import { JwtAuthGuard } from './guard/jwt-auth.guard';
 
 @Controller('/api/auth')
 export class AuthController {
@@ -39,10 +41,12 @@ export class AuthController {
   }
 
   @Post('refresh-token')
-  @UseGuards(AuthGuard('refresh-token'))
+  @UseGuards(JwtAuthGuard)
   async refreshToken(
     @Req() req,
+    @GetUserId() userId: number,
   ): Promise<{ accessToken: string; refreshToken: string }> {
-    return await this.authService.refreshToken(req.user);
+    const { authorization } = req.headers;
+    return await this.authService.refreshToken(authorization, userId);
   }
 }

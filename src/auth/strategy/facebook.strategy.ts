@@ -20,7 +20,6 @@ export class FacebookStrategy extends PassportStrategy(Strategy, 'facebook') {
     refreshToken: string,
     profile: Profile,
   ): Promise<UserDto> {
-    console.log(profile);
     return {
       provider: profile.provider,
       providerId: profile.id,

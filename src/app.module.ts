@@ -10,6 +10,7 @@ import { User } from './auth/entity/user.entity';
 import { Puzzle } from './puzzle/entity/puzzle.entity';
 import { Message } from './message/entity/message.entity';
 import { UserModule } from './user/user.module';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -45,6 +46,12 @@ import { UserModule } from './user/user.module';
         database: configService.get('DB_SCHEMA'),
         entities: [User, Puzzle, Message],
         synchronize: true,
+      }),
+    }),
+    JwtModule.registerAsync({
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        secret: configService.get('JWT_SECRET'),
       }),
     }),
     AuthModule,

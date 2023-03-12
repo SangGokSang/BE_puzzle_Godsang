@@ -1,11 +1,11 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entity/user.entity';
 import { Repository } from 'typeorm';
 import { UserDto } from './dto/user.dto';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
-import { DeletedUserException } from './exception/deleted-user.exception';
+import { JwtPayload } from './dto/jwt-payload';
 
 @Injectable()
 export class AuthService {
@@ -23,8 +23,14 @@ export class AuthService {
   }
 
   async refreshToken(
-    user: User,
+    authorization: string,
+    userId: number,
   ): Promise<{ accessToken: string; refreshToken: string }> {
+    const user = await this.userRepository.findOneByOrFail({ id: userId });
+    const refreshToken = authorization.replace('Bearer ', '');
+    if (!(await bcrypt.compare(refreshToken, user.hashedRefreshToken))) {
+      throw new UnauthorizedException('잘못된 토큰입니다.');
+    }
     const token = this.createToken(user);
     await this.updateHashedRefreshToken(user, token.refreshToken);
     return token;
@@ -36,9 +42,6 @@ export class AuthService {
       where: { provider, providerId },
       withDeleted: true,
     });
-    if (existingUser?.deleteAt) {
-      throw new DeletedUserException();
-    }
     return existingUser || this.userRepository.create(userDto).save();
   }
 
@@ -46,21 +49,14 @@ export class AuthService {
     accessToken: string;
     refreshToken: string;
   } {
-    const accessToken = this.jwtService.sign(
-      {
-        userId: user.id,
-        nickname: user.nickname,
-        birthdate: user.birthdate,
-      },
-      { expiresIn: '1h' },
-    );
-    const refreshToken = this.jwtService.sign(
-      {
-        provider: user.provider,
-        providerId: user.providerId,
-      },
-      { expiresIn: '1d' },
-    );
+    const payload: JwtPayload = {
+      userId: user.id,
+      nickname: user.nickname,
+      birthdate: user.birthdate,
+      isDeleted: !!user.deleteAt,
+    };
+    const accessToken = this.jwtService.sign(payload, { expiresIn: '1h' });
+    const refreshToken = this.jwtService.sign(payload, { expiresIn: '1d' });
     return { accessToken, refreshToken };
   }
 
