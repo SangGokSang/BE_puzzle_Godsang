@@ -14,5 +14,28 @@ jobs:
       - run: echo 'Checkout Repository'
       - name: Checkout Repository
         uses: actions/checkout@2.4.2
-        
-          
+
+      # 16.16.0 버전의 NodeJS를 세팅해줍니다.
+      - run: echo 'Setup NodeJS Environment
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v3.4.1
+        with:
+          node-version: 18.12.1
+
+      # Dependency들을 설치합니다. yarn도 사용 가능합니다.
+      - run: echo 'Install Dependencies'
+      - name: Install Dependencies
+        run: npm install
+
+      # NestJS Application을 빌드합니다.
+      - run: echo 'Build a Nest Application'
+      - name: Build a Nest Application
+        run: npm run build
+        shell: bash
+
+      # 레포지토리를 압축시킵니다.
+      # 다만 불필요한 node_module, coverage, src, test, readme, .git* 등의 파일은 제외시킵니다.
+      - run : echo 'Make a zip file'
+      - name: Make a zip file
+        run: zip -r ./$GITHUB_SHA.zip . -x "node_modules/*" "coverage/*" "src/*" "test/*" "README.md" "*.git*"
+        shell: bash
