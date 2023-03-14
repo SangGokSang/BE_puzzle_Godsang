@@ -1,14 +1,8 @@
-import {
-  ArgumentsHost,
-  Catch,
-  ExceptionFilter,
-  HttpException,
-  Logger,
-} from '@nestjs/common';
+import { ArgumentsHost, Catch, ExceptionFilter, Logger } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { CustomException, ExceptionCode } from './custom.exception';
+import { CustomException } from './custom.exception';
 
-@Catch(CustomException, HttpException)
+@Catch(CustomException)
 export class CustomExceptionFilter implements ExceptionFilter {
   logger = new Logger(CustomExceptionFilter.name);
 
@@ -19,7 +13,7 @@ export class CustomExceptionFilter implements ExceptionFilter {
     const status = exception.getStatus();
 
     this.logger.error(
-      `HTTP: [${request.method} ${request.url}] HOSTNAME: [${request.hostname}] IP: [${request.ip}] EXCEPTION CODE: [${exception.code}]`,
+      `HTTP: [${request.method} ${request.url}] HOSTNAME: [${request.hostname}] IP: [${request.ip}] EXCEPTION CODE: [${exception.code}] STACK: [${exception.stack}]`,
     );
 
     response.status(status).json({

@@ -8,6 +8,8 @@ export enum ExceptionCode {
   MESSAGE_FULL = 'MESSAGE_FULL',
   NO_KEY = 'NO_KEY',
   MESSAGE_ALREADY_OPEN = 'MESSAGE_ALREADY_OPEN',
+  INVALID_DATE = 'INVALID_DATE',
+  PUZZLE_FULL = 'PUZZLE_FULL',
 }
 
 export class CustomException extends HttpException {

@@ -23,6 +23,7 @@ export class UserController {
     @GetUserId() userId: number,
     @Body(ParseUserUpdateDtoPipe, ValidationPipe) userUpdateDto: UserUpdateDto,
   ) {
+    console.log(userUpdateDto);
     await this.userService.updateUser(userId, userUpdateDto);
   }
 

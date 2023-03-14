@@ -1,6 +1,7 @@
 export class MessageDto {
   id: number;
   content: string;
-  senderNickname: string;
+  from: string;
+  to: string;
   isOpened: boolean;
 }

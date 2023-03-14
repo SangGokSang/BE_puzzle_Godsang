@@ -22,7 +22,10 @@ export class Message extends BaseEntity {
   puzzle: Puzzle;
 
   @Column({ type: 'varchar', length: 25, nullable: false })
-  senderNickname: string;
+  from: string;
+
+  @Column({ type: 'varchar', length: 25, nullable: false })
+  to: string;
 
   @Column({ nullable: false })
   isOpened: boolean;
@@ -37,7 +40,8 @@ export class Message extends BaseEntity {
     return {
       id: this.id,
       content: this.content,
-      senderNickname: this.senderNickname,
+      from: this.from,
+      to: this.to,
       isOpened: this.isOpened,
     };
   }

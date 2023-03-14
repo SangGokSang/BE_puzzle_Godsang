@@ -21,6 +21,16 @@ export class PuzzleService {
   ) {}
 
   async createPuzzle(userId: number, puzzleCreateDto: PuzzleCreateDto) {
+    const puzzleCount = await this.puzzleRepository.count({
+      where: { user: { id: userId } },
+    });
+    if (puzzleCount >= 3) {
+      throw new CustomException(
+        ExceptionCode.PUZZLE_FULL,
+        '이미 3개의 퍼즐이 존재합니다',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
     const { category, title } = puzzleCreateDto;
     await this.puzzleRepository
       .create({ user: { id: userId }, category, title })
@@ -49,7 +59,7 @@ export class PuzzleService {
     if (puzzle.messages.length >= 9) {
       throw new CustomException(
         ExceptionCode.MESSAGE_FULL,
-        '이미 9개에 메세지가 존재합니다',
+        '이미 9개의 메세지가 존재합니다',
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -58,7 +68,8 @@ export class PuzzleService {
       .create({
         content: messageCreateDto.content,
         puzzle: puzzle,
-        senderNickname: userNickname,
+        from: messageCreateDto.from,
+        to: messageCreateDto.to,
         isOpened: false,
       })
       .save();
