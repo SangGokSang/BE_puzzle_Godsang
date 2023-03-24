@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
-import * as process from 'process';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PuzzleModule } from './puzzle/puzzle.module';
 import * as Joi from 'joi';
@@ -16,15 +15,11 @@ import { CustomExceptionFilter } from './exception/custom.exception-filter';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: `.${process.env.NODE_ENV}.env`,
+      envFilePath: `.env`,
       validationSchema: Joi.object({
-        NODE_ENV: Joi.string().valid('dev').required(),
-        SERVER_PORT: Joi.string().required().default(8080),
         DB_HOST: Joi.string().required(),
-        DB_PORT: Joi.number().required(),
         DB_USER: Joi.string().required(),
         DB_PASSWORD: Joi.string().required(),
-        DB_SCHEMA: Joi.string().required(),
         JWT_SECRET: Joi.string().required(),
         GOOGLE_CLIENT_ID: Joi.string().required(),
         GOOGLE_CLIENT_SECRET: Joi.string().required(),
@@ -33,6 +28,9 @@ import { CustomExceptionFilter } from './exception/custom.exception-filter';
         KAKAO_CALLBACK_URL: Joi.string().required(),
         NAVER_CLIENT_ID: Joi.string().required(),
         NAVER_CALLBACK_URL: Joi.string().required(),
+        FACEBOOK_CLIENT_ID: Joi.string().required(),
+        FACEBOOK_CLIENT_SECRET: Joi.string().required(),
+        FACEBOOK_CALLBACK_URL: Joi.string().required(),
       }),
     }),
     TypeOrmModule.forRootAsync({
@@ -40,10 +38,10 @@ import { CustomExceptionFilter } from './exception/custom.exception-filter';
       useFactory: (configService: ConfigService) => ({
         type: 'mariadb',
         host: configService.get('DB_HOST'),
-        port: configService.get<number>('DB_PORT'),
+        port: 3306,
         username: configService.get('DB_USER'),
         password: configService.get('DB_PASSWORD'),
-        database: configService.get('DB_SCHEMA'),
+        database: 'dm2023',
         entities: [User, Puzzle, Message],
         synchronize: true,
         logging: true,
