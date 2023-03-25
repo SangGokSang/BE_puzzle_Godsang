@@ -1,9 +1,18 @@
 version: '3'
 
 services:
-  nest-app:
-    build: .
-    container_name: nest-app-green
-    restart: always
+  nginx:
+    image: nginx:latest
+    container_name: nginx
     ports:
-      - '3002:3000'
+      - "80:80"
+    volumes:
+      - ./dm2023-nest.conf:/etc/nginx/conf.d/
+
+  dm2023-nest:
+    build:
+      context: ./
+    container_name: dm2023-nest
+    restart: always
+    expose:
+      - "3000"
