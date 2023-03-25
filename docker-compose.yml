@@ -8,7 +8,7 @@ services:
       - "80:80"
     # nginx 설장 파일 volume 맵핑
     volumes:
-      - ./dm2023-nest.conf:/etc/nginx/conf.d/
+      - /dm2023-nest.conf:/etc/nginx/nginx.conf
     # 내부에서 에러로 인해 container가 죽을 경우 restart
     restart: "unless-stopped"
 
