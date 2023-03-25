@@ -17,7 +17,7 @@ services:
     build:
       # 빌드할 Dockerfile 경로
       context: ./
-    container_name: dm2023-nest
+    container_name: dm2023-nest-app
     restart: always
     expose:
       - "3000"
