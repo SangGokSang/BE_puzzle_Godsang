@@ -4,13 +4,14 @@ services:
   nginx:
     image: nginx:latest
     container_name: nginx
+    network_mode: "host"
     ports:
       - "80:80"
+      - "443:443"
     # nginx 설장 파일 volume 맵핑
     volumes:
-      - /dm2023-nest.conf:/etc/nginx/nginx.conf
-    # 내부에서 에러로 인해 container가 죽을 경우 restart
-    restart: "unless-stopped"
+      - ./nginx/dm2023-nest.conf:/etc/nginx/nginx.conf
+    restart: "always"
 
   dm2023-nest:
     build:
