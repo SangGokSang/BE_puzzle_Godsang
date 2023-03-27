@@ -1,6 +1,7 @@
 #!/bin/sh
 
 cd /home/ubuntu/dm2023-nest
+
 # test
 sudo docker stop dm2023-nest
 sudo docker rm dm2023-nest
