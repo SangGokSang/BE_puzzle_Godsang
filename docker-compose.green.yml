@@ -5,5 +5,5 @@ services:
     build: .
     container_name: dm2023-nest-green
     restart: always
-    expose:
+    ports:
       - '3001:3000'

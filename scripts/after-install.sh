@@ -5,7 +5,7 @@ cd /home/ubuntu/dm2023-nest || exit
 EXIST_PROXY=$(sudo docker-compose -p proxy -f docker-compose.proxy.yml ps | grep running)
 
 if [ -z "$EXIST_PROXY" ]; then
-    echo "> Proxy Container is existed"
+    echo "> Proxy Container is not existed"
     sudo docker-compose -p proxy -f docker-compose.proxy.yml up -d
 fi
 
