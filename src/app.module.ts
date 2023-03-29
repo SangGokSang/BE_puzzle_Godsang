@@ -10,6 +10,7 @@ import { Message } from './puzzle/entity/message.entity';
 import { UserModule } from './user/user.module';
 import { APP_FILTER } from '@nestjs/core';
 import { CustomExceptionFilter } from './exception/custom.exception-filter';
+import { HealthModule } from './health/health.module';
 
 @Module({
   imports: [
@@ -50,6 +51,7 @@ import { CustomExceptionFilter } from './exception/custom.exception-filter';
     AuthModule,
     PuzzleModule,
     UserModule,
+    HealthModule,
   ],
   controllers: [],
   providers: [{ provide: APP_FILTER, useClass: CustomExceptionFilter }],
