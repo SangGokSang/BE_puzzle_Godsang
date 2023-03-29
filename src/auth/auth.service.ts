@@ -7,6 +7,7 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
 import { JwtPayload } from './dto/jwt-payload';
 import { CustomException, ExceptionCode } from '../exception/custom.exception';
+import { Response } from 'express';
 
 @Injectable()
 export class AuthService {
@@ -16,11 +17,17 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async loginOrSignIn(userDto: OauthUserDto) {
+  async loginOrSignIn(userDto: OauthUserDto, res: Response): Promise<Response> {
     const user = await this.findUserOrSave(userDto);
-    const token = this.createToken(user);
-    await this.updateHashedRefreshToken(user.id, token.refreshToken);
-    return token;
+    const { accessToken, refreshToken } = this.createToken(user);
+    await this.updateHashedRefreshToken(user.id, refreshToken);
+    res.cookie('refresh-token', refreshToken, {
+      // todo domain: 'dm2023.click',
+      httpOnly: true,
+      secure: true,
+    });
+    res.json(accessToken);
+    return res;
   }
 
   async refreshToken(
