@@ -1,6 +1,5 @@
 import { Controller, Get } from '@nestjs/common';
 import {
-  DiskHealthIndicator,
   HealthCheck,
   HealthCheckService,
   HttpHealthIndicator,
@@ -13,17 +12,19 @@ export class HealthController {
     private health: HealthCheckService,
     private http: HttpHealthIndicator,
     private db: TypeOrmHealthIndicator,
-    private disk: DiskHealthIndicator,
   ) {}
 
-  @Get()
+  @Get('http')
   @HealthCheck()
   check() {
     return this.health.check([
       () => this.http.pingCheck('nestjs-docs', 'https://docs.nestjs.com'),
-      () => this.db.pingCheck('database'),
-      () =>
-        this.disk.checkStorage('storage', { path: '/', thresholdPercent: 0.5 }),
     ]);
+  }
+
+  @Get('/db')
+  @HealthCheck()
+  checkDB() {
+    return this.health.check([() => this.db.pingCheck('database')]);
   }
 }

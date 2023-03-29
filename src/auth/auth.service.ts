@@ -64,7 +64,7 @@ export class AuthService {
     const payload: JwtPayload = {
       userId: user.id,
       nickname: user.nickname,
-      birthdate: user.birthdate.getTime(),
+      birthdate: user.birthdate?.getTime(),
       isDeleted: !!user.deleteAt,
     };
     const accessToken = this.jwtService.sign(payload, { expiresIn: '1h' });
