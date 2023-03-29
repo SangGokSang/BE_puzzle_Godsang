@@ -59,4 +59,4 @@ jobs:
       # CodeDeploy 애플리케이션 이름
       AWS_CODEDEPLOY_APPLICATION_NAME: Nest-app-code-deploy
       # CodeDeploy 배포 그룹 이름
-      AWS_CODEDEPLOY_DEPLOYMENT_GROUP_NAME: Nest-App-DG
+      AWS_CODEDEPLOY_DEPLOYMENT_GROUP_NAME: Nest-app-DG
