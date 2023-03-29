@@ -25,7 +25,7 @@ jobs:
 
       - name: Create .env file
         run: |
-          jq -r 'to_entries | map(select(.key != "AWS_ACCESS_KEY_ID" and .key != "AWS_SECRET_ACCESS_KEY")| "\(.key)=\(.value|tostring)") | .[]' <<< "$SECRETS_CONTEXT" > .env
+          jq -r 'to_entries | map(select(.key != "AWS_ACCESS_KEY_ID" and .key != "AWS_SECRET_ACCESS_KEY" and .key != "github_token")| "\(.key)=\(.value|tostring)") | .[]' <<< "$SECRETS_CONTEXT" > .env
         env:
           SECRETS_CONTEXT: ${{ toJson(secrets) }}
 
@@ -59,4 +59,4 @@ jobs:
       # CodeDeploy 애플리케이션 이름
       AWS_CODEDEPLOY_APPLICATION_NAME: Nest-app-code-deploy
       # CodeDeploy 배포 그룹 이름
-      AWS_CODEDEPLOY_DEPLOYMENT_GROUP_NAME: Nest-app-DG
+      AWS_CODEDEPLOY_DEPLOYMENT_GROUP_NAME: Backend-DG
