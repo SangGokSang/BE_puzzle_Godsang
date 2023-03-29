@@ -31,21 +31,27 @@ export class AuthService {
   }
 
   async refreshToken(
-    authorization: string,
+    oldRefreshToken: string,
     userId: number,
-  ): Promise<{ accessToken: string; refreshToken: string }> {
+    res: Response,
+  ): Promise<Response> {
     const user = await this.userRepository.findOneByOrFail({ id: userId });
-    const refreshToken = authorization.replace('Bearer ', '');
-    if (!(await bcrypt.compare(refreshToken, user.hashedRefreshToken))) {
+    if (!(await bcrypt.compare(oldRefreshToken, user.hashedRefreshToken))) {
       throw new CustomException(
         ExceptionCode.INVALID_TOKEN,
         'Refresh Token 비교 중에 예외가 발생했습니다.',
         HttpStatus.UNAUTHORIZED,
       );
     }
-    const token = this.createToken(user);
-    await this.updateHashedRefreshToken(user.id, token.refreshToken);
-    return token;
+    const { accessToken, refreshToken } = this.createToken(user);
+    await this.updateHashedRefreshToken(user.id, refreshToken);
+    res.cookie('refresh-token', refreshToken, {
+      // todo domain: 'dm2023.click',
+      httpOnly: true,
+      secure: true,
+    });
+    res.json(accessToken);
+    return res;
   }
 
   private async findUserOrSave(userDto: OauthUserDto) {

@@ -34,11 +34,18 @@ export class AuthController {
 
   @Post('refresh-token')
   @UseGuards(JwtAuthGuard)
-  async refreshToken(
-    @Req() req,
-    @GetUserId() userId: number,
-  ): Promise<{ accessToken: string; refreshToken: string }> {
-    const { authorization } = req.headers;
-    return await this.authService.refreshToken(authorization, userId);
+  async refreshToken(@Req() req, @Res() res, @GetUserId() userId: number) {
+    const { refreshToken } = req.cookies['refresh-token'];
+    return await this.authService.refreshToken(refreshToken, userId, res);
+  }
+
+  @Post('/logout')
+  logout(@Req() req: Request, @Res() res) {
+    res.cookie('refresh-token', '', {
+      maxAge: 0,
+    });
+    return res.send({
+      message: 'success',
+    });
   }
 }
