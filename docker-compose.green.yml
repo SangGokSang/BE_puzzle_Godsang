@@ -1,0 +1,9 @@
+version: '3'
+
+services:
+  dm2023-nest:
+    build: .
+    container_name: dm2023-nest-green
+    restart: always
+    expose:
+      - '3001:3000'
