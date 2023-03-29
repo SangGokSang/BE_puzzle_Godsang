@@ -19,15 +19,7 @@ export class AuthService {
 
   async loginOrSignIn(userDto: OauthUserDto, res: Response): Promise<Response> {
     const user = await this.findUserOrSave(userDto);
-    const { accessToken, refreshToken } = this.createToken(user);
-    await this.updateHashedRefreshToken(user.id, refreshToken);
-    res.cookie('refresh-token', refreshToken, {
-      // todo domain: 'dm2023.click',
-      httpOnly: true,
-      secure: true,
-    });
-    res.json(accessToken);
-    return res;
+    return await this.issueToken(user, res);
   }
 
   async refreshToken(
@@ -43,15 +35,7 @@ export class AuthService {
         HttpStatus.UNAUTHORIZED,
       );
     }
-    const { accessToken, refreshToken } = this.createToken(user);
-    await this.updateHashedRefreshToken(user.id, refreshToken);
-    res.cookie('refresh-token', refreshToken, {
-      // todo domain: 'dm2023.click',
-      httpOnly: true,
-      secure: true,
-    });
-    res.json(accessToken);
-    return res;
+    return await this.issueToken(user, res);
   }
 
   private async findUserOrSave(userDto: OauthUserDto) {
@@ -63,10 +47,7 @@ export class AuthService {
     return existingUser || this.userRepository.create(userDto).save();
   }
 
-  private createToken(user: User): {
-    accessToken: string;
-    refreshToken: string;
-  } {
+  private async issueToken(user: User, res: Response): Promise<Response> {
     const payload: JwtPayload = {
       userId: user.id,
       nickname: user.nickname,
@@ -75,7 +56,15 @@ export class AuthService {
     };
     const accessToken = this.jwtService.sign(payload, { expiresIn: '1h' });
     const refreshToken = this.jwtService.sign(payload, { expiresIn: '1d' });
-    return { accessToken, refreshToken };
+
+    await this.updateHashedRefreshToken(user.id, refreshToken);
+    res.cookie('refresh-token', refreshToken, {
+      // todo domain: 'dearmy2023.click',
+      httpOnly: true,
+      secure: true,
+    });
+    res.json(accessToken);
+    return res;
   }
 
   private async updateHashedRefreshToken(
