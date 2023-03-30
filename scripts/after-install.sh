@@ -36,7 +36,7 @@ for RETRY_COUNT in $(seq 1 10)
 do
     echo "> Retrying... (${RETRY_COUNT})"
 
-    RESPONSE_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:${TARGET_PORT}/api/health)
+    RESPONSE_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:${TARGET_PORT}/api/health/http)
 
     if [ "${RESPONSE_CODE}" -eq 200 ]; then
         echo "> New Nest App successfully running"
