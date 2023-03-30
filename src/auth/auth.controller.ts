@@ -10,19 +10,27 @@ export class AuthController {
 
   @Get('/google')
   @UseGuards(AuthGuard('google'))
-  async google() {}
+  async google() {
+    // redirect page
+  }
 
   @Get('/kakao')
   @UseGuards(AuthGuard('google'))
-  async kakao() {}
+  async kakao() {
+    // redirect page
+  }
 
   @Get('/naver')
   @UseGuards(AuthGuard('google'))
-  async naver() {}
+  async naver() {
+    // redirect page
+  }
 
   @Get('/facebook')
   @UseGuards(AuthGuard('google'))
-  async facebook() {}
+  async facebook() {
+    // redirect page
+  }
 
   @Get('/login/google')
   @UseGuards(AuthGuard('google'))
