@@ -8,5 +8,5 @@ services:
     ports:
       - "80:80"
     volumes:
-      - ./nginx:/etc/nginx/conf.d
+      - ./nginx/nginx.conf:/etc/nginx/conf
     restart: "always"
