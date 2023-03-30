@@ -8,6 +8,22 @@ import { JwtAuthGuard } from './guard/jwt-auth.guard';
 export class AuthController {
   constructor(private authService: AuthService) {}
 
+  @Get('/google')
+  @UseGuards(AuthGuard('google'))
+  async google() {}
+
+  @Get('/kakao')
+  @UseGuards(AuthGuard('google'))
+  async kakao() {}
+
+  @Get('/naver')
+  @UseGuards(AuthGuard('google'))
+  async naver() {}
+
+  @Get('/facebook')
+  @UseGuards(AuthGuard('google'))
+  async facebook() {}
+
   @Get('/login/google')
   @UseGuards(AuthGuard('google'))
   async loginGoogle(@Req() req, @Res() res) {
