@@ -4,9 +4,8 @@ services:
   nginx:
     image: nginx:latest
     container_name: proxy
-    network_mode: "host"
     ports:
       - "80:80"
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/conf
+      - ./nginx/nginx.conf:/etc/nginx/conf.d
     restart: "always"
