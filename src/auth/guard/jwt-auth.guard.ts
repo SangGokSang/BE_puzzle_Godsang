@@ -49,19 +49,19 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
         case 'invalid token':
           throw new CustomException(
             ExceptionCode.INVALID_TOKEN,
-            '잘못 된 토큰입니다.',
+            e.message,
             HttpStatus.BAD_REQUEST,
           );
         case 'jwt expired':
           throw new CustomException(
             ExceptionCode.EXPIRED_TOKEN,
-            '만료된 토큰입니다.',
+            e.message,
             410,
           );
         default:
           throw new CustomException(
             ExceptionCode.INTERNAL_SERVER_ERROR,
-            '서버 오류입니다.',
+            e.message,
             500,
           );
       }

@@ -57,6 +57,6 @@ jobs:
       # S3 버킷 내 폴더 이름
       PROJECT_NAME: dm2023_nest
       # CodeDeploy 애플리케이션 이름
-      AWS_CODEDEPLOY_APPLICATION_NAME: Nest-app-code-deploy
+      AWS_CODEDEPLOY_APPLICATION_NAME: Backend-app
       # CodeDeploy 배포 그룹 이름
       AWS_CODEDEPLOY_DEPLOYMENT_GROUP_NAME: Backend-DG

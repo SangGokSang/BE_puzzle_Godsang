@@ -45,7 +45,6 @@ import { HealthModule } from './health/health.module';
         database: 'dm2023',
         entities: [User, Puzzle, Message],
         synchronize: true,
-        logging: true,
       }),
     }),
     AuthModule,
