@@ -1,59 +1,16 @@
-import { Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
+import { Body, Controller, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { GetUserId } from './decorator/get-user-id.decorator';
 import { JwtAuthGuard } from './guard/jwt-auth.guard';
+import { LoginDto } from './dto/oauth-user.dto';
 
 @Controller('/api/auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @Get('/google')
-  @UseGuards(AuthGuard('google'))
-  async google() {
-    // redirect page
-  }
-
-  @Get('/kakao')
-  @UseGuards(AuthGuard('google'))
-  async kakao() {
-    // redirect page
-  }
-
-  @Get('/naver')
-  @UseGuards(AuthGuard('google'))
-  async naver() {
-    // redirect page
-  }
-
-  @Get('/facebook')
-  @UseGuards(AuthGuard('google'))
-  async facebook() {
-    // redirect page
-  }
-
-  @Get('/login/google')
-  @UseGuards(AuthGuard('google'))
-  async loginGoogle(@Req() req, @Res() res) {
-    return await this.authService.loginOrSignIn(req.user, res);
-  }
-
-  @Get('/login/kakao')
-  @UseGuards(AuthGuard('kakao'))
-  async loginKaKao(@Req() req, @Res() res) {
-    return await this.authService.loginOrSignIn(req.user, res);
-  }
-
-  @Get('/login/naver')
-  @UseGuards(AuthGuard('naver'))
-  async loginNaver(@Req() req, @Res() res) {
-    return await this.authService.loginOrSignIn(req.user, res);
-  }
-
-  @Get('/login/facebook')
-  @UseGuards(AuthGuard('facebook'))
-  async loginFacebook(@Req() req, @Res() res) {
-    return await this.authService.loginOrSignIn(req.user, res);
+  @Post('/login')
+  async loginFacebook(@Body() loginDto: LoginDto, @Res() res) {
+    return await this.authService.loginOrSignIn(loginDto, res);
   }
 
   @Post('refresh-token')

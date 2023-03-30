@@ -2,7 +2,7 @@ import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entity/user.entity';
 import { Repository } from 'typeorm';
-import { OauthUserDto } from './dto/oauth-user.dto';
+import { LoginDto } from './dto/oauth-user.dto';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
 import { JwtPayload } from './dto/jwt-payload';
@@ -17,7 +17,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async loginOrSignIn(userDto: OauthUserDto, res: Response): Promise<Response> {
+  async loginOrSignIn(userDto: LoginDto, res: Response): Promise<Response> {
     const user = await this.findUserOrSave(userDto);
     return await this.issueToken(user, res);
   }
@@ -38,7 +38,7 @@ export class AuthService {
     return await this.issueToken(user, res);
   }
 
-  private async findUserOrSave(userDto: OauthUserDto) {
+  private async findUserOrSave(userDto: LoginDto) {
     const { provider, providerId } = userDto;
     const existingUser = await this.userRepository.findOne({
       where: { provider, providerId },
