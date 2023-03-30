@@ -10,9 +10,7 @@ export class AuthController {
 
   @Post('/login')
   async loginFacebook(@Body() loginDto: LoginDto, @Res() res) {
-    const response = await this.authService.loginOrSignIn(loginDto, res);
-    console.log(response);
-    return response;
+    return await this.authService.loginOrSignIn(loginDto, res);
   }
 
   @Post('refresh-token')
