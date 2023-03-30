@@ -1,9 +1,0 @@
-version: '3'
-
-services:
-  dm2023-nest:
-    build: .
-    container_name: dm2023-nest-blue
-    restart: always
-    ports:
-      - '3002:3000'

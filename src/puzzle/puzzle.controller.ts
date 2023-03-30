@@ -17,7 +17,7 @@ import { PuzzleDto } from './dto/puzzle.dto';
 import { MessageCreateDto } from './dto/message-create.dto';
 import { GetUserNickname } from '../auth/decorator/get-user-nickname.decorator';
 
-@Controller('/api/puzzle')
+@Controller('/api/puzzles')
 export class PuzzleController {
   constructor(private puzzleService: PuzzleService) {}
 

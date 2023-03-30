@@ -10,3 +10,10 @@ services:
       - "80:80"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+
+  dm2023-nest:
+    build: .
+    container_name: dm2023-nest
+    restart: always
+    ports:
+      - '3000:3000'
