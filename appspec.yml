@@ -15,10 +15,6 @@ permissions:
     group: ubuntu
 
 hooks:
-  BeforeInstall:
-    - location: scripts/before-install.sh
-      timeout: 600
-      runas: ubuntu
   AfterInstall:
     - location: scripts/after-install.sh
       timeout: 600
