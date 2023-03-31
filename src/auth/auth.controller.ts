@@ -4,11 +4,11 @@ import { GetUserId } from './decorator/get-user-id.decorator';
 import { JwtAuthGuard } from './guard/jwt-auth.guard';
 import { LoginDto } from './dto/oauth-user.dto';
 
-@Controller('/api/auth')
+@Controller('/api/user')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @Post('/login')
+  @Post('login')
   async loginFacebook(@Body() loginDto: LoginDto, @Res() res) {
     return await this.authService.loginOrSignIn(loginDto, res);
   }
@@ -20,7 +20,7 @@ export class AuthController {
     return await this.authService.refreshToken(refreshToken, userId, res);
   }
 
-  @Post('/logout')
+  @Post('logout')
   logout(@Req() req: Request, @Res() res) {
     res.cookie('refresh-token', '', {
       maxAge: 0,
