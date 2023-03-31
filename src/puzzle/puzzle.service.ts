@@ -75,7 +75,11 @@ export class PuzzleService {
       .save();
   }
 
-  async readMessage(userId: number, puzzleId: number, messageId: number) {
+  async readMessage(
+    userId: number,
+    puzzleId: number,
+    messageId: number,
+  ): Promise<{ keyCount: number }> {
     const message = await this.messageRepository
       .createQueryBuilder()
       .where({ id: messageId })

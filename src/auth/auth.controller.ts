@@ -25,8 +25,6 @@ export class AuthController {
     res.cookie('refresh-token', '', {
       maxAge: 0,
     });
-    return res.send({
-      message: 'success',
-    });
+    return res.send();
   }
 }
