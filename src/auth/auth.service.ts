@@ -2,7 +2,7 @@ import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entity/user.entity';
 import { Repository } from 'typeorm';
-import { LoginDto } from './dto/oauth-user.dto';
+import { LoginDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
 import { JwtPayload } from './dto/jwt-payload';
@@ -55,13 +55,14 @@ export class AuthService {
       isDeleted: !!user.deleteAt,
     };
     const accessToken = this.jwtService.sign(payload, { expiresIn: '1h' });
-    const refreshToken = this.jwtService.sign(payload, { expiresIn: '1d' });
+    const refreshToken = this.jwtService.sign(payload, { expiresIn: '3h' });
 
     await this.updateHashedRefreshToken(user.id, refreshToken);
     res.cookie('refresh-token', refreshToken, {
       // todo domain: 'dearmy2023.click',
       httpOnly: true,
       secure: true,
+      maxAge: 1000 * 60 * 60 * 3, // 3 hour
     });
     res.json(accessToken);
     return res;
@@ -74,5 +75,12 @@ export class AuthService {
     const salt = bcrypt.genSaltSync();
     const hashedRefreshToken = bcrypt.hashSync(refreshToken, salt);
     await this.userRepository.update({ id: userId }, { hashedRefreshToken });
+  }
+
+  async logout(res: Response): Promise<Response> {
+    res.cookie('refresh-token', '', {
+      maxAge: 0,
+    });
+    return res;
   }
 }

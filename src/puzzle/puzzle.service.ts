@@ -50,29 +50,35 @@ export class PuzzleService {
     puzzleId: number,
     messageCreateDto: MessageCreateDto,
   ) {
-    const puzzle = await this.puzzleRepository
-      .createQueryBuilder('puzzle')
-      .leftJoinAndSelect('puzzle.messages', 'message')
-      .where({ id: puzzleId })
-      .getOneOrFail();
+    const messageCount = await this.messageRepository.count({
+      where: { puzzle: { id: puzzleId } },
+    });
 
-    if (puzzle.messages.length >= 9) {
+    if (messageCount >= 9) {
       throw new CustomException(
         ExceptionCode.MESSAGE_FULL,
         '이미 9개의 메세지가 존재합니다',
         HttpStatus.BAD_REQUEST,
       );
     }
-
-    await this.messageRepository
-      .create({
-        content: messageCreateDto.content,
-        puzzle: puzzle,
-        from: messageCreateDto.from,
-        to: messageCreateDto.to,
-        isOpened: false,
-      })
-      .save();
+    await this.userRepository.manager.transaction(async (manager) => {
+      await manager
+        .createQueryBuilder()
+        .update(User)
+        .set({
+          keyCount: () => 'key_count + 1',
+        })
+        .where({ userId });
+      await manager
+        .create(Message, {
+          content: messageCreateDto.content,
+          puzzle: { id: puzzleId },
+          from: messageCreateDto.from,
+          to: messageCreateDto.to,
+          isOpened: false,
+        })
+        .save();
+    });
   }
 
   async readMessage(

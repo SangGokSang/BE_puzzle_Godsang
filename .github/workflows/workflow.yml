@@ -53,7 +53,7 @@ jobs:
     env:
       REGION: ap-northeast-2
       # S3 버킷 이름
-      S3_BUCKET_NAME: dm2023-bucket
+      S3_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
       # S3 버킷 내 폴더 이름
       PROJECT_NAME: dm2023_nest
       # CodeDeploy 애플리케이션 이름

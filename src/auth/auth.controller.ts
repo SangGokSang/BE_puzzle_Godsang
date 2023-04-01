@@ -2,7 +2,7 @@ import { Body, Controller, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { GetUserId } from './decorator/get-user-id.decorator';
 import { JwtAuthGuard } from './guard/jwt-auth.guard';
-import { LoginDto } from './dto/oauth-user.dto';
+import { LoginDto } from './dto/login.dto';
 
 @Controller('/api/user')
 export class AuthController {
@@ -21,10 +21,7 @@ export class AuthController {
   }
 
   @Post('/logout')
-  logout(@Req() req: Request, @Res() res) {
-    res.cookie('refresh-token', '', {
-      maxAge: 0,
-    });
-    return res.send();
+  async logout(@Req() req: Request, @Res() res) {
+    return await this.authService.logout(res);
   }
 }
