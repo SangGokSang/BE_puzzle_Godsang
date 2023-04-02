@@ -88,7 +88,7 @@ export class PuzzleService {
   ): Promise<{ keyCount: number }> {
     const message = await this.messageRepository
       .createQueryBuilder()
-      .where({ id: messageId })
+      .where({ id: messageId, puzzle: { id: puzzleId } })
       .getOneOrFail();
 
     if (message.isOpened) {
