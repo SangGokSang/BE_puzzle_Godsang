@@ -1,4 +1,12 @@
-import { Body, Controller, Post, Req, Res, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  Req,
+  Res,
+  UseGuards,
+  ValidationPipe,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { GetUserId } from './decorator/get-user-id.decorator';
 import { JwtAuthGuard } from './guard/jwt-auth.guard';
@@ -9,7 +17,7 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post('/login')
-  async login(@Body() loginDto: LoginDto, @Res() res) {
+  async login(@Body(ValidationPipe) loginDto: LoginDto, @Res() res) {
     return await this.authService.loginOrSignIn(loginDto, res);
   }
 
