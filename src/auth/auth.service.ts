@@ -81,6 +81,6 @@ export class AuthService {
     res.cookie('refresh-token', '', {
       maxAge: 0,
     });
-    return res;
+    return res.status(200);
   }
 }
