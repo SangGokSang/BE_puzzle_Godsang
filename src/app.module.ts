@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { AuthModule } from './auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PuzzleModule } from './puzzle/puzzle.module';
 import * as Joi from 'joi';
@@ -37,7 +36,6 @@ import { HealthModule } from './health/health.module';
         synchronize: true,
       }),
     }),
-    AuthModule,
     PuzzleModule,
     UserModule,
     HealthModule,
