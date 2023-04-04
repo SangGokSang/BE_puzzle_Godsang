@@ -53,17 +53,29 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
             e.message,
             HttpStatus.BAD_REQUEST,
           );
+        case 'jwt malformed':
+          throw new CustomException(
+            ExceptionCode.MALFORMED_TOKEN,
+            e.message,
+            HttpStatus.BAD_REQUEST,
+          );
+        case 'jwt must be provided':
+          throw new CustomException(
+            ExceptionCode.INVALID_TOKEN,
+            e.message,
+            HttpStatus.BAD_REQUEST,
+          );
         case 'jwt expired':
           throw new CustomException(
             ExceptionCode.EXPIRED_TOKEN,
             e.message,
-            410,
+            HttpStatus.UNAUTHORIZED,
           );
         default:
           throw new CustomException(
             ExceptionCode.INTERNAL_SERVER_ERROR,
             e.message,
-            500,
+            HttpStatus.INTERNAL_SERVER_ERROR,
           );
       }
     }
