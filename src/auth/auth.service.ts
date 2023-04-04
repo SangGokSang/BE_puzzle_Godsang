@@ -66,7 +66,7 @@ export class AuthService {
       accessToken,
       userId: user.id,
       nickname: user.nickname,
-      birthDate: user.birthdate.getTime(),
+      birthDate: user.birthdate?.getTime(),
     });
     return res;
   }
