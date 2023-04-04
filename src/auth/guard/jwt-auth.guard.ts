@@ -20,7 +20,6 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
   canActivate(context: ExecutionContext) {
     const request = context.switchToHttp().getRequest();
     const { authorization } = request.headers;
-    console.log(request.headers);
     if (!authorization) {
       throw new CustomException(
         ExceptionCode.INVALID_TOKEN,
@@ -41,7 +40,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     return true;
   }
 
-  validateToken(token: string): any {
+  validateToken(token: string): JwtPayload {
     try {
       return this.jwtService.verify(token, {
         secret: this.configService.get('JWT_SECRET'),
