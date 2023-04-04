@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   ParseIntPipe,
@@ -15,7 +16,7 @@ import { PuzzleCreateDto } from './dto/puzzle-create.dto';
 import { GetUserId } from '../auth/decorator/get-user-id.decorator';
 import { PuzzleDto } from './dto/puzzle.dto';
 import { MessageCreateDto } from './dto/message-create.dto';
-import { GetUserNickname } from '../auth/decorator/get-user-nickname.decorator';
+import { JwtPassGuard } from '../auth/guard/jwt-pass.guard';
 
 @Controller('/api/puzzles')
 export class PuzzleController {
@@ -31,29 +32,32 @@ export class PuzzleController {
   }
 
   @Get()
-  @UseGuards(JwtAuthGuard)
-  async getPuzzles(@GetUserId() userId: number): Promise<PuzzleDto[]> {
+  @UseGuards(JwtPassGuard)
+  async getPuzzles(@Body('userId') userId: number): Promise<PuzzleDto[]> {
     return await this.puzzleService.getPuzzles(userId);
   }
 
-  @Post(':puzzleId')
+  @Delete(':puzzleId')
   @UseGuards(JwtAuthGuard)
+  async deletePuzzles(
+    @GetUserId() userId: number,
+    @Param('puzzleId', ParseIntPipe) puzzleId: number,
+  ): Promise<void> {
+    return await this.puzzleService.deletePuzzle(userId, puzzleId);
+  }
+
+  @Post(':puzzleId')
+  @UseGuards(JwtPassGuard)
   async createMessage(
     @GetUserId() userId: number,
-    @GetUserNickname() userNickname: string,
     @Param('puzzleId', ParseIntPipe)
     puzzleId: number,
     @Body(ValidationPipe) messageCreateDto: MessageCreateDto,
   ) {
-    await this.puzzleService.createMessage(
-      userId,
-      userNickname,
-      puzzleId,
-      messageCreateDto,
-    );
+    await this.puzzleService.createMessage(userId, puzzleId, messageCreateDto);
   }
 
-  @Patch(':puzzleId/message/:messageId')
+  @Patch(':puzzleId/messages/:messageId')
   @UseGuards(JwtAuthGuard)
   async readMessage(
     @GetUserId() userId: number,

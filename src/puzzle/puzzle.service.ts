@@ -44,9 +44,15 @@ export class PuzzleService {
     return puzzles.map((puzzle) => puzzle.toDto());
   }
 
+  async deletePuzzle(userId: number, puzzleId: number): Promise<void> {
+    const puzzle = await this.puzzleRepository.findOneOrFail({
+      where: { id: puzzleId, user: { id: userId } },
+    });
+    await puzzle.softRemove();
+  }
+
   async createMessage(
-    userId: number,
-    userNickname: string,
+    userId: number | null,
     puzzleId: number,
     messageCreateDto: MessageCreateDto,
   ) {
@@ -61,14 +67,17 @@ export class PuzzleService {
         HttpStatus.BAD_REQUEST,
       );
     }
+
     await this.userRepository.manager.transaction(async (manager) => {
-      await manager
-        .createQueryBuilder()
-        .update(User)
-        .set({
-          keyCount: () => 'key_count + 1',
-        })
-        .where({ userId });
+      if (userId) {
+        await manager
+          .createQueryBuilder()
+          .update(User)
+          .set({
+            keyCount: () => 'key_count + 1',
+          })
+          .where({ userId });
+      }
       await manager
         .create(Message, {
           content: messageCreateDto.content,

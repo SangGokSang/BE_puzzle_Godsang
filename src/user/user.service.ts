@@ -4,7 +4,6 @@ import { Repository } from 'typeorm';
 import { User } from '../auth/entity/user.entity';
 import { UserUpdateDto } from './dto/user-update.dto';
 import { UserKeyDto } from './dto/user-key.dto';
-import { UserNicknameBirthdateDto } from './dto/user-nickname-birthdate.dto';
 
 @Injectable()
 export class UserService {
@@ -33,14 +32,5 @@ export class UserService {
   async updateUser(userId: number, userUpdateDto: UserUpdateDto) {
     // userId가 존재하지 않아도 아무런 예외를 던지지 않음
     await this.userRepository.update({ id: userId }, userUpdateDto);
-  }
-
-  async getUserNicknameAndBirthdate(
-    userId: number,
-  ): Promise<UserNicknameBirthdateDto> {
-    const { nickname, birthdate } = await this.userRepository.findOneOrFail({
-      where: { id: userId },
-    });
-    return { nickname, birthdate: birthdate.getTime() };
   }
 }

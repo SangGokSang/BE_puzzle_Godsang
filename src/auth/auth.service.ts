@@ -50,21 +50,24 @@ export class AuthService {
   private async issueToken(user: User, res: Response): Promise<Response> {
     const payload: JwtPayload = {
       userId: user.id,
-      nickname: user.nickname,
-      birthdate: user.birthdate?.getTime(),
-      isDeleted: !!user.deleteAt,
+      isWithdrawUser: !!user.deleteAt,
     };
     const accessToken = this.jwtService.sign(payload, { expiresIn: '1h' });
     const refreshToken = this.jwtService.sign(payload, { expiresIn: '3h' });
-
     await this.updateHashedRefreshToken(user.id, refreshToken);
+
     res.cookie('refresh-token', refreshToken, {
       // todo domain: 'dearmy2023.click',
       httpOnly: true,
       secure: true,
       maxAge: 1000 * 60 * 60 * 3, // 3 hour
     });
-    res.json(accessToken);
+    res.json({
+      accessToken,
+      userId: user.id,
+      nickname: user.nickname,
+      birthDate: user.birthdate.getTime(),
+    });
     return res;
   }
 

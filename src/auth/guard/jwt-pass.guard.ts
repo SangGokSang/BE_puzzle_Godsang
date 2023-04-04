@@ -6,10 +6,9 @@ import {
   CustomException,
   ExceptionCode,
 } from '../../exception/custom.exception';
-import { JwtPayload } from '../dto/jwt-payload';
 
 @Injectable()
-export class JwtAuthGuard extends AuthGuard('jwt') {
+export class JwtPassGuard extends AuthGuard('jwt') {
   constructor(
     private jwtService: JwtService,
     private configService: ConfigService,
@@ -20,23 +19,9 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
   canActivate(context: ExecutionContext) {
     const request = context.switchToHttp().getRequest();
     const { authorization } = request.headers;
-    if (authorization) {
-      throw new CustomException(
-        ExceptionCode.INVALID_TOKEN,
-        'Authorization 헤더가 비어 있습니다.',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
+    if (!authorization) return;
     const token = authorization.replace('Bearer ', '');
-    const user: JwtPayload = this.validateToken(token);
-    if (user.isWithdrawUser && request.url !== '/api/user/restore') {
-      throw new CustomException(
-        ExceptionCode.INVALID_USER,
-        `탈퇴한 사용자입니다.`,
-        403,
-      );
-    }
-    request.user = user;
+    request.user = this.validateToken(token);
     return true;
   }
 

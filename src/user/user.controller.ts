@@ -12,19 +12,10 @@ import { UserUpdateDto } from './dto/user-update.dto';
 import { ParseUserUpdateDtoPipe } from './pipe/parse-date.pipe';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
 import { UserKeyDto } from './dto/user-key.dto';
-import { UserNicknameBirthdateDto } from './dto/user-nickname-birthdate.dto';
 
 @Controller('/api/user')
 export class UserController {
   constructor(private userService: UserService) {}
-
-  @Get()
-  @UseGuards(JwtAuthGuard)
-  async getUserInfo(
-    @GetUserId() userId: number,
-  ): Promise<UserNicknameBirthdateDto> {
-    return await this.userService.getUserNicknameAndBirthdate(userId);
-  }
 
   @Patch('/withdraw')
   @UseGuards(JwtAuthGuard)
