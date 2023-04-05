@@ -33,7 +33,6 @@ export class PuzzleController {
   }
 
   @Get()
-  @UseGuards(JwtPassGuard)
   async getPuzzles(
     @Query('userId', ParseIntPipe) userId: number,
   ): Promise<PuzzleDto[]> {
