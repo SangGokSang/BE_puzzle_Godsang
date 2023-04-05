@@ -7,6 +7,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Query,
   UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
@@ -33,7 +34,9 @@ export class PuzzleController {
 
   @Get()
   @UseGuards(JwtPassGuard)
-  async getPuzzles(@Body('userId') userId: number): Promise<PuzzleDto[]> {
+  async getPuzzles(
+    @Query('userId', ParseIntPipe) userId: number,
+  ): Promise<PuzzleDto[]> {
     return await this.puzzleService.getPuzzles(userId);
   }
 
