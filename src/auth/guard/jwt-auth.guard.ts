@@ -20,6 +20,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
   canActivate(context: ExecutionContext) {
     const request = context.switchToHttp().getRequest();
     const { authorization } = request.headers;
+    console.log(authorization);
     if (!authorization) {
       throw new CustomException(
         ExceptionCode.INVALID_TOKEN,
@@ -33,7 +34,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       throw new CustomException(
         ExceptionCode.INVALID_USER,
         `탈퇴한 사용자입니다.`,
-        403,
+        HttpStatus.UNAUTHORIZED,
       );
     }
     request.user = user;

@@ -19,6 +19,7 @@ export class JwtPassGuard extends AuthGuard('jwt') {
   canActivate(context: ExecutionContext) {
     const request = context.switchToHttp().getRequest();
     const { authorization } = request.headers;
+    console.log(authorization);
     if (!authorization) return;
     const token = authorization.replace('Bearer ', '');
     request.user = this.validateToken(token);
