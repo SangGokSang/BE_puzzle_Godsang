@@ -40,6 +40,7 @@ export class PuzzleService {
   async getPuzzles(userId: number): Promise<PuzzleDto[]> {
     const puzzles = await this.puzzleRepository.find({
       where: { user: { id: userId } },
+      order: { createAt: 'DESC' },
     });
     return puzzles.map((puzzle) => puzzle.toDto());
   }
