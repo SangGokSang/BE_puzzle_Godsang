@@ -20,7 +20,6 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
   canActivate(context: ExecutionContext) {
     const request = context.switchToHttp().getRequest();
     const { authorization } = request.headers;
-    console.log(authorization);
     if (!authorization) {
       throw new CustomException(
         ExceptionCode.INVALID_TOKEN,

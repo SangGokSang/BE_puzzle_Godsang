@@ -23,7 +23,7 @@ export class Puzzle extends BaseEntity {
   @Column({ type: 'varchar', length: 20, nullable: false })
   category: string;
 
-  @ManyToOne(() => User, (user) => user.puzzles, { eager: false })
+  @ManyToOne(() => User, (user) => user.puzzles, { eager: true })
   user: User;
 
   @OneToMany(() => Message, (message) => message.puzzle, {
@@ -47,6 +47,7 @@ export class Puzzle extends BaseEntity {
       category: this.category,
       title: this.title,
       messages: this.messages.map((messageEntity) => messageEntity.toDto()),
+      userNickname: this.user.nickname,
     };
   }
 }

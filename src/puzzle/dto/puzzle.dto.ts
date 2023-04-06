@@ -5,4 +5,5 @@ export class PuzzleDto {
   category: string;
   title: string;
   messages: MessageDto[];
+  userNickname: string;
 }

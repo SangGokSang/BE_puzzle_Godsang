@@ -13,7 +13,9 @@ export class CustomExceptionFilter implements ExceptionFilter {
     const status = exception.getStatus();
 
     this.logger.error(
-      `HTTP: [${request.method} ${request.url}] EXCEPTION CODE: [${exception.code}] MESSAGE: [${exception.message}] STACK: [${exception.stack}] USER-AGENT: [${request.headers['user-agent']}]`,
+      `HTTP: [${request.method} ${request.url}] EXCEPTION CODE: [${exception.code}] MESSAGE: [${exception.message}]
+       USER-AGENT: [${request.headers['user-agent']}]
+       STACK: [${exception.stack}]`,
     );
 
     response.status(status).json({
