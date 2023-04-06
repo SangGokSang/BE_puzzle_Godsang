@@ -56,11 +56,11 @@ export class PuzzleService {
     puzzleId: number,
     messageCreateDto: MessageCreateDto,
   ) {
-    const messageCount = await this.messageRepository.count({
-      where: { puzzle: { id: puzzleId } },
+    const puzzle: Puzzle = await this.puzzleRepository.findOneOrFail({
+      where: { id: puzzleId },
     });
 
-    if (messageCount >= 9) {
+    if (puzzle.messages.length >= 9) {
       throw new CustomException(
         ExceptionCode.MESSAGE_FULL,
         '이미 9개의 메세지가 존재합니다',
@@ -78,8 +78,11 @@ export class PuzzleService {
           })
           .where({ userId });
       }
+      const displayOrder = this.createDisplayOrder(puzzle.messages);
+
       await manager
         .create(Message, {
+          displayOrder,
           content: messageCreateDto.content,
           puzzle: { id: puzzleId },
           from: messageCreateDto.from,
@@ -124,5 +127,17 @@ export class PuzzleService {
       await manager.update(Message, messageId, { isOpened: true });
     });
     return { keyCount };
+  }
+
+  createDisplayOrder(messages: Message[]) {
+    let newNum;
+    const displayOrders = messages.map((message) => {
+      return message.displayOrder;
+    });
+    do {
+      newNum = Math.floor(Math.random() * 9);
+    } while (displayOrders.includes(newNum));
+
+    return newNum;
   }
 }

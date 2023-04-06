@@ -16,6 +16,9 @@ export class Message extends BaseEntity {
   id: number;
 
   @Column({ nullable: false })
+  displayOrder: number;
+
+  @Column({ nullable: false })
   content: string;
 
   @ManyToOne(() => Puzzle, (puzzle) => puzzle.messages, { eager: false })
@@ -39,6 +42,7 @@ export class Message extends BaseEntity {
   toDto(): MessageDto {
     return {
       id: this.id,
+      displayOrder: this.displayOrder,
       content: this.content,
       from: this.from,
       to: this.to,
