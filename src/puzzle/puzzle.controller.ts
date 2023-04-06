@@ -39,7 +39,7 @@ export class PuzzleController {
     return await this.puzzleService.getPuzzles(userId);
   }
 
-  @Delete(':puzzleId')
+  @Delete('/:puzzleId')
   @UseGuards(JwtAuthGuard)
   async deletePuzzles(
     @GetUserId() userId: number,
@@ -48,7 +48,7 @@ export class PuzzleController {
     return await this.puzzleService.deletePuzzle(userId, puzzleId);
   }
 
-  @Post(':puzzleId')
+  @Post('/:puzzleId')
   @UseGuards(JwtPassGuard)
   async createMessage(
     @GetUserId() userId: number,
@@ -59,7 +59,7 @@ export class PuzzleController {
     await this.puzzleService.createMessage(userId, puzzleId, messageCreateDto);
   }
 
-  @Patch(':puzzleId/messages/:messageId')
+  @Patch('/:puzzleId/messages/:messageId')
   @UseGuards(JwtAuthGuard)
   async readMessage(
     @GetUserId() userId: number,

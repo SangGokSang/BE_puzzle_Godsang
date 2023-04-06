@@ -74,9 +74,10 @@ export class PuzzleService {
           .createQueryBuilder()
           .update(User)
           .set({
-            keyCount: () => 'key_count + 1',
+            keyCount: () => 'keyCount + 1',
           })
-          .where({ userId });
+          .where('id = :id', { id: userId })
+          .execute();
       }
       const displayOrder = this.createDisplayOrder(puzzle.messages);
 
