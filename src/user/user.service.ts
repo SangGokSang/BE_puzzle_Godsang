@@ -37,9 +37,16 @@ export class UserService {
     return await this.issueToken(user, res);
   }
 
-  async updateUser(userId: number, userUpdateDto: UserUpdateDto) {
+  async updateUser(
+    userId: number,
+    userUpdateDto: UserUpdateDto,
+  ): Promise<{ nickname: string; birthdate: number }> {
     // userId가 존재하지 않아도 아무런 예외를 던지지 않음
     await this.userRepository.update({ id: userId }, userUpdateDto);
+    const { nickname, birthdate } = await this.userRepository.findOneOrFail({
+      where: { id: userId },
+    });
+    return { nickname, birthdate: birthdate.getTime() };
   }
 
   async loginOrSignIn(userDto: LoginDto, res: Response): Promise<Response> {

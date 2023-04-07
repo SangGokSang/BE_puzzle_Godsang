@@ -50,8 +50,8 @@ export class UserController {
   async updateUser(
     @GetUserId() userId: number,
     @Body(ParseUserUpdateDtoPipe, ValidationPipe) userUpdateDto: UserUpdateDto,
-  ) {
-    await this.userService.updateUser(userId, userUpdateDto);
+  ): Promise<{ nickname: string; birthdate: number }> {
+    return await this.userService.updateUser(userId, userUpdateDto);
   }
 
   @Patch('/restore')
@@ -62,7 +62,7 @@ export class UserController {
 
   @Get('/key')
   @UseGuards(JwtAuthGuard)
-  async getUser(@GetUserId() userId): Promise<UserKeyDto> {
+  async getUserKeyCount(@GetUserId() userId): Promise<UserKeyDto> {
     return await this.userService.getUserKeyCount(userId);
   }
 }
