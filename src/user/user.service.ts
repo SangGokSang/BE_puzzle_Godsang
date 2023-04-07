@@ -91,7 +91,7 @@ export class UserService {
       accessToken,
       userId: user.id,
       nickname: user.nickname,
-      birthDate: user.birthdate?.getTime(),
+      birthdate: user.birthdate?.getTime(),
     });
     return res;
   }
