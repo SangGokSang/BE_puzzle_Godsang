@@ -31,8 +31,22 @@ export class UserService {
     await this.userRepository.softDelete(userId);
   }
 
-  async restoreUser(userId: number): Promise<void> {
+  async restoreUser(userId: number): Promise<{
+    birthdate: number;
+    isWithdrawUser: boolean;
+    nickname: string;
+    userId: number;
+  }> {
     await this.userRepository.restore(userId);
+    const user = await this.userRepository.findOneOrFail({
+      where: { id: userId },
+    });
+    return {
+      userId,
+      nickname: user.nickname,
+      birthdate: user.birthdate?.getTime(),
+      isWithdrawUser: !!user.deleteAt,
+    };
   }
 
   async updateUser(
