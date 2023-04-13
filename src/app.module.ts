@@ -33,6 +33,7 @@ import { TypeORMExceptionFilter } from './exception/typeORM.exception-filter';
         username: configService.get('DB_USER'),
         password: configService.get('DB_PASSWORD'),
         database: 'dm2023',
+        charset: 'utf8mb4',
         entities: [User, Puzzle, Message],
         synchronize: true,
       }),
