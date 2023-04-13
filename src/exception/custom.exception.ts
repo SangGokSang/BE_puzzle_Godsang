@@ -11,6 +11,7 @@ export enum ExceptionCode {
   INVALID_DATE = 'INVALID_DATE',
   PUZZLE_FULL = 'PUZZLE_FULL',
   MALFORMED_TOKEN = 'MALFORMED_TOKEN',
+  TYPE_ORM_ERROR = 'TYPE_ORM_ERROR',
 }
 
 export class CustomException extends HttpException {

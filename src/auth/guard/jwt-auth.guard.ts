@@ -28,15 +28,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       );
     }
     const token = authorization.replace('Bearer ', '');
-    const user: JwtPayload = this.validateToken(token);
-    if (user.isWithdrawUser && request.url !== '/api/user/restore') {
-      throw new CustomException(
-        ExceptionCode.INVALID_USER,
-        `탈퇴한 사용자입니다.`,
-        HttpStatus.UNAUTHORIZED,
-      );
-    }
-    request.user = user;
+    request.user = this.validateToken(token);
     return true;
   }
 

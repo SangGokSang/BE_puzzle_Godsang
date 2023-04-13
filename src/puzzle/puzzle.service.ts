@@ -38,6 +38,16 @@ export class PuzzleService {
   }
 
   async getPuzzles(userId: number): Promise<PuzzleDto[]> {
+    const exist = await this.userRepository.exist({
+      where: { id: userId },
+    });
+    if (!exist) {
+      throw new CustomException(
+        ExceptionCode.INVALID_USER,
+        '존재하지 않는 userId 입니다.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
     const puzzles = await this.puzzleRepository.find({
       where: { user: { id: userId } },
       order: { createAt: 'DESC' },

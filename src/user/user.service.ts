@@ -46,7 +46,7 @@ export class UserService {
     const { nickname, birthdate } = await this.userRepository.findOneOrFail({
       where: { id: userId },
     });
-    return { nickname, birthdate: birthdate.getTime() };
+    return { nickname, birthdate: birthdate?.getTime() };
   }
 
   async loginOrSignIn(userDto: LoginDto, res: Response): Promise<Response> {
@@ -82,7 +82,6 @@ export class UserService {
   async issueToken(user: User, res: Response): Promise<Response> {
     const payload: JwtPayload = {
       userId: user.id,
-      isWithdrawUser: !!user.deleteAt,
     };
     const accessToken = this.jwtService.sign(payload, { expiresIn: '1h' });
     const refreshToken = this.jwtService.sign(payload, { expiresIn: '3h' });
@@ -99,6 +98,7 @@ export class UserService {
       userId: user.id,
       nickname: user.nickname,
       birthdate: user.birthdate?.getTime(),
+      isWithdrawUser: !!user.deleteAt,
     });
     return res;
   }

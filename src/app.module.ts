@@ -10,6 +10,7 @@ import { UserModule } from './user/user.module';
 import { APP_FILTER } from '@nestjs/core';
 import { CustomExceptionFilter } from './exception/custom.exception-filter';
 import { HealthModule } from './health/health.module';
+import { TypeORMExceptionFilter } from './exception/typeORM.exception-filter';
 
 @Module({
   imports: [
@@ -41,6 +42,12 @@ import { HealthModule } from './health/health.module';
     HealthModule,
   ],
   controllers: [],
-  providers: [{ provide: APP_FILTER, useClass: CustomExceptionFilter }],
+  providers: [
+    { provide: APP_FILTER, useClass: CustomExceptionFilter },
+    {
+      provide: APP_FILTER,
+      useClass: TypeORMExceptionFilter,
+    },
+  ],
 })
 export class AppModule {}
