@@ -26,7 +26,7 @@ export class User extends BaseEntity {
   @Column({ type: 'varchar', default: null })
   email: string;
 
-  @Column({ type: 'varchar', length: 25, default: null })
+  @Column({ type: 'varchar', length: 30, default: null })
   nickname?: string;
 
   @Column({ type: 'timestamp', default: null })

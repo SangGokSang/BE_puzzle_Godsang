@@ -24,10 +24,10 @@ export class Message extends BaseEntity {
   @ManyToOne(() => Puzzle, (puzzle) => puzzle.messages, { eager: false })
   puzzle: Puzzle;
 
-  @Column({ type: 'varchar', length: 25, nullable: false })
+  @Column({ type: 'varchar', length: 60, nullable: false })
   from: string;
 
-  @Column({ type: 'varchar', length: 25, nullable: false })
+  @Column({ type: 'varchar', length: 60, nullable: false })
   to: string;
 
   @Column({ nullable: false })

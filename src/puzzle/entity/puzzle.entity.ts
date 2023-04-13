@@ -18,7 +18,7 @@ export class Puzzle extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'varchar', length: 40, nullable: false })
+  @Column({ type: 'varchar', length: 100, nullable: false })
   title: string;
   @Column({ type: 'varchar', length: 20, nullable: false })
   category: string;

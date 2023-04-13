@@ -5,6 +5,6 @@ export class PuzzleCreateDto {
   category: string;
 
   @Matches(/^[^;]*$/)
-  @Length(4, 20)
+  @Length(1, 30)
   title: string;
 }
