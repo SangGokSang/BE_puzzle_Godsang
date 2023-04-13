@@ -35,7 +35,8 @@ export class User extends BaseEntity {
   @Column({ type: 'varchar', default: null })
   hashedRefreshToken?: string;
 
-  @Column({ nullable: false, default: 3 })
+  // todo 갯수
+  @Column({ nullable: false, default: 100 })
   keyCount: number;
 
   @OneToMany(() => Puzzle, (puzzle) => puzzle.user, { eager: false })
