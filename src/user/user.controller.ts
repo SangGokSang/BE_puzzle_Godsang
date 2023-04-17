@@ -70,4 +70,9 @@ export class UserController {
   async getUserKeyCount(@GetUserId() userId): Promise<UserKeyDto> {
     return await this.userService.getUserKeyCount(userId);
   }
+  @Patch('/key')
+  @UseGuards(JwtAuthGuard)
+  async updateUserKeyCount(@GetUserId() userId): Promise<UserKeyDto> {
+    return await this.userService.updateUserKeyCount(userId);
+  }
 }

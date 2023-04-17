@@ -26,6 +26,17 @@ export class UserService {
     return { keyCount: user.keyCount };
   }
 
+  async updateUserKeyCount(userId) {
+    const user = await this.userRepository.findOneOrFail({
+      where: { id: userId },
+    });
+    await this.userRepository.update(
+      { id: userId },
+      { keyCount: user.keyCount + 1 },
+    );
+    return { keyCount: user.keyCount };
+  }
+
   async withdrawUser(userId: number): Promise<void> {
     await this.userRepository.findOneOrFail({ where: { id: userId } });
     await this.userRepository.softDelete(userId);
