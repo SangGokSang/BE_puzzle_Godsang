@@ -72,8 +72,8 @@ export class UserService {
     return { nickname, birthdate: birthdate?.getTime() };
   }
 
-  async loginOrSignIn(userDto: LoginDto, res: Response): Promise<Response> {
-    const { user, isSignIn } = await this.findUserOrSave(userDto);
+  async loginOrSignUp(userDto: LoginDto, res: Response): Promise<Response> {
+    const { user, isSignUp } = await this.findUserOrSave(userDto);
     const { accessToken, refreshToken } = await this.issueToken(user);
 
     res.cookie('refresh-token', refreshToken, {
@@ -88,7 +88,7 @@ export class UserService {
       nickname: user.nickname,
       birthdate: user.birthdate?.getTime(),
       isWithdrawUser: !!user.deleteAt,
-      isSignIn,
+      isSignUp,
     });
     return res;
   }
@@ -126,7 +126,7 @@ export class UserService {
 
   private async findUserOrSave(userDto: LoginDto): Promise<{
     user: User;
-    isSignIn: boolean;
+    isSignUp: boolean;
   }> {
     const { provider, providerId } = userDto;
     const existingUser = await this.userRepository.findOne({
@@ -134,10 +134,10 @@ export class UserService {
       withDeleted: true,
     });
     if (existingUser) {
-      return { user: existingUser, isSignIn: false };
+      return { user: existingUser, isSignUp: false };
     } else {
       const user = await this.userRepository.create(userDto).save();
-      return { user, isSignIn: true };
+      return { user, isSignUp: true };
     }
   }
 

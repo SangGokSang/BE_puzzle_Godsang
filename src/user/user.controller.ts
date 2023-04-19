@@ -23,7 +23,7 @@ export class UserController {
 
   @Post('/login')
   async login(@Body(ValidationPipe) loginDto: LoginDto, @Res() res) {
-    return await this.userService.loginOrSignIn(loginDto, res);
+    return await this.userService.loginOrSignUp(loginDto, res);
   }
 
   @Post('/refresh-token')
