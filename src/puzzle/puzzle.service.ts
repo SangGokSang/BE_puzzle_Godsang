@@ -21,16 +21,6 @@ export class PuzzleService {
   ) {}
 
   async createPuzzle(userId: number, puzzleCreateDto: PuzzleCreateDto) {
-    const puzzleCount = await this.puzzleRepository.count({
-      where: { user: { id: userId } },
-    });
-    if (puzzleCount >= 3) {
-      throw new CustomException(
-        ExceptionCode.PUZZLE_FULL,
-        '이미 3개의 퍼즐이 존재합니다',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
     const { category, title } = puzzleCreateDto;
     await this.puzzleRepository
       .create({ user: { id: userId }, category, title })
