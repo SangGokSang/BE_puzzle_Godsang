@@ -73,8 +73,24 @@ export class UserService {
   }
 
   async loginOrSignIn(userDto: LoginDto, res: Response): Promise<Response> {
-    const user = await this.findUserOrSave(userDto);
-    return await this.issueToken(user, res);
+    const { user, isSignIn } = await this.findUserOrSave(userDto);
+    const { accessToken, refreshToken } = await this.issueToken(user);
+
+    res.cookie('refresh-token', refreshToken, {
+      // todo domain: 'dearmy2023.click',
+      httpOnly: true,
+      secure: true,
+      maxAge: 1000 * 60 * 60 * 3, // 3 hour
+    });
+    res.json({
+      accessToken,
+      userId: user.id,
+      nickname: user.nickname,
+      birthdate: user.birthdate?.getTime(),
+      isWithdrawUser: !!user.deleteAt,
+      isSignIn,
+    });
+    return res;
   }
 
   async refreshToken(
@@ -90,25 +106,7 @@ export class UserService {
         HttpStatus.UNAUTHORIZED,
       );
     }
-    return await this.issueToken(user, res);
-  }
-
-  private async findUserOrSave(userDto: LoginDto) {
-    const { provider, providerId } = userDto;
-    const existingUser = await this.userRepository.findOne({
-      where: { provider, providerId },
-      withDeleted: true,
-    });
-    return existingUser || this.userRepository.create(userDto).save();
-  }
-
-  async issueToken(user: User, res: Response): Promise<Response> {
-    const payload: JwtPayload = {
-      userId: user.id,
-    };
-    const accessToken = this.jwtService.sign(payload, { expiresIn: '1h' });
-    const refreshToken = this.jwtService.sign(payload, { expiresIn: '3h' });
-    await this.updateHashedRefreshToken(user.id, refreshToken);
+    const { accessToken, refreshToken } = await this.issueToken(user);
 
     res.cookie('refresh-token', refreshToken, {
       // todo domain: 'dearmy2023.click',
@@ -124,6 +122,35 @@ export class UserService {
       isWithdrawUser: !!user.deleteAt,
     });
     return res;
+  }
+
+  private async findUserOrSave(userDto: LoginDto): Promise<{
+    user: User;
+    isSignIn: boolean;
+  }> {
+    const { provider, providerId } = userDto;
+    const existingUser = await this.userRepository.findOne({
+      where: { provider, providerId },
+      withDeleted: true,
+    });
+    if (existingUser) {
+      return { user: existingUser, isSignIn: false };
+    } else {
+      const user = await this.userRepository.create(userDto).save();
+      return { user, isSignIn: true };
+    }
+  }
+
+  async issueToken(
+    user: User,
+  ): Promise<{ accessToken: string; refreshToken: string }> {
+    const payload: JwtPayload = {
+      userId: user.id,
+    };
+    const accessToken = this.jwtService.sign(payload, { expiresIn: '1h' });
+    const refreshToken = this.jwtService.sign(payload, { expiresIn: '3h' });
+    await this.updateHashedRefreshToken(user.id, refreshToken);
+    return { accessToken, refreshToken };
   }
 
   private async updateHashedRefreshToken(
