@@ -49,7 +49,7 @@ export class PuzzleService {
     const puzzle = await this.puzzleRepository.findOneOrFail({
       where: { id: puzzleId, user: { id: userId } },
     });
-    await puzzle.softRemove();
+    await puzzle.remove();
   }
 
   async createMessage(
