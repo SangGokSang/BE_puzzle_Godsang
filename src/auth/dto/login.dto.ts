@@ -4,7 +4,7 @@ export class LoginDto {
   @IsIn(['google', 'kakao', 'naver', 'facebook'])
   provider: string;
   providerId: string;
-  @Length(1, 7)
+  @Length(1, 10)
   nickname: string;
   @IsEmail()
   email: string;
