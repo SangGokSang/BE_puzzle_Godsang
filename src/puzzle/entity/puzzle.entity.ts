@@ -2,12 +2,10 @@ import {
   BaseEntity,
   Column,
   CreateDateColumn,
-  DeleteDateColumn,
   Entity,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
 } from 'typeorm';
 import { User } from '../../auth/entity/user.entity';
 import { Message } from './message.entity';
@@ -34,9 +32,6 @@ export class Puzzle extends BaseEntity {
 
   @CreateDateColumn({ type: 'timestamp' })
   createAt: Date;
-
-  @UpdateDateColumn({ type: 'timestamp' })
-  updatedAt: Date;
 
   toDto(): PuzzleDto {
     return {
