@@ -5,6 +5,7 @@ export class UserUpdateDto {
   @Matches(/^[^;]*$/)
   @Length(1, 10)
   nickname: string;
+
   @MaxDate(new Date())
   birthdate: Date;
 }

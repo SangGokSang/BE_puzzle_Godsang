@@ -38,9 +38,6 @@ export class Puzzle extends BaseEntity {
   @UpdateDateColumn({ type: 'timestamp' })
   updatedAt: Date;
 
-  @DeleteDateColumn({ type: 'timestamp' })
-  deletedAt: Date;
-
   toDto(): PuzzleDto {
     return {
       id: this.id,

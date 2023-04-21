@@ -39,9 +39,6 @@ export class Message extends BaseEntity {
   @CreateDateColumn({ type: 'timestamp' })
   createAt: Date;
 
-  @DeleteDateColumn({ type: 'timestamp' })
-  deleteAt: Date;
-
   toDto(): MessageDto {
     return {
       id: this.id,
