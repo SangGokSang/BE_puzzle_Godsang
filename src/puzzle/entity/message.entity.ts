@@ -21,7 +21,10 @@ export class Message extends BaseEntity {
   @Column({ nullable: false })
   content: string;
 
-  @ManyToOne(() => Puzzle, (puzzle) => puzzle.messages, { eager: false })
+  @ManyToOne(() => Puzzle, (puzzle) => puzzle.messages, {
+    eager: false,
+    onDelete: 'CASCADE',
+  })
   puzzle: Puzzle;
 
   @Column({ type: 'varchar', length: 60, nullable: false })
