@@ -47,6 +47,7 @@ export class UserService {
     isWithdrawUser: boolean;
     nickname: string;
     userId: number;
+    isSignUp: boolean;
   }> {
     await this.userRepository.restore(userId);
     const user = await this.userRepository.findOneOrFail({
@@ -57,6 +58,7 @@ export class UserService {
       nickname: user.nickname,
       birthdate: user.birthdate?.getTime(),
       isWithdrawUser: !!user.deleteAt,
+      isSignUp: true,
     };
   }
 

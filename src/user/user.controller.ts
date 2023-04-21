@@ -61,6 +61,7 @@ export class UserController {
     isWithdrawUser: boolean;
     nickname: string;
     userId: number;
+    isSignUp: boolean;
   }> {
     return await this.userService.restoreUser(userId);
   }
