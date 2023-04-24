@@ -91,6 +91,8 @@ export class UserService {
       birthdate: user.birthdate?.getTime(),
       isWithdrawUser: !!user.deleteAt,
       isSignUp,
+      provider: user.provider,
+      email: user.email,
     });
     return res;
   }
