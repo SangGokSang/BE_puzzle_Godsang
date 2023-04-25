@@ -19,11 +19,12 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
 
   canActivate(context: ExecutionContext) {
     const request = context.switchToHttp().getRequest();
-    const { authorization } = request.headers;
+    const authorization =
+      request.headers['authorization'] || request.cookies['refresh-token'];
     if (!authorization) {
       throw new CustomException(
         ExceptionCode.INVALID_TOKEN,
-        'Authorization 헤더가 비어 있습니다.',
+        'Authorization 헤더 혹은 쿠키가 비어 있습니다.',
         HttpStatus.BAD_REQUEST,
       );
     }
