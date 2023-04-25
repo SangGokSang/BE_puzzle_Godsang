@@ -21,8 +21,11 @@ export class TypeORMExceptionFilter implements ExceptionFilter {
     const code = ExceptionCode.TYPE_ORM_ERROR;
 
     this.logger.error(
-      `HTTP: [${request.method} ${request.url}] EXCEPTION CODE: [${code}] MESSAGE: [${exception.message}]
+      `HTTP: [${request.method} ${request.url}]
+       EXCEPTION CODE: [${code}]
+       MESSAGE: [${exception.message}]
        USER-AGENT: [${request.headers['user-agent']}]
+       IP: [${request.headers['X-Forwared-For']}]
        STACK: [${exception.stack}]`,
     );
 

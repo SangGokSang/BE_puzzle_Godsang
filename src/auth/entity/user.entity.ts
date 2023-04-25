@@ -38,6 +38,9 @@ export class User extends BaseEntity {
   @Column({ nullable: false, default: 3 })
   keyCount: number;
 
+  @Column({ type: 'timestamp', nullable: false, default: null })
+  keyUpdateAt: Date;
+
   @OneToMany(() => Puzzle, (puzzle) => puzzle.user, { eager: false })
   puzzles: Puzzle[];
 
@@ -46,6 +49,7 @@ export class User extends BaseEntity {
 
   @UpdateDateColumn({ type: 'timestamp' })
   updatedAt: Date;
+
   @DeleteDateColumn({ type: 'timestamp', default: null })
   deleteAt: Date;
 }

@@ -93,11 +93,11 @@ export class PuzzleService {
 
       await manager
         .create(Message, {
-          displayOrder,
-          content: messageCreateDto.content,
           puzzle: { id: puzzleId },
           from: messageCreateDto.from,
           to: messageCreateDto.to,
+          displayOrder,
+          content: messageCreateDto.content,
           isOpened: false,
         })
         .save();

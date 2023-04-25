@@ -30,9 +30,18 @@ export class UserService {
     const user = await this.userRepository.findOneOrFail({
       where: { id: userId },
     });
+    const diffTime = new Date().getTime() - user.keyUpdateAt.getTime();
+    if (diffTime / 1000 < 10) {
+      throw new CustomException(
+        ExceptionCode.HASTY_KEY_UPDATE,
+        '10초 미만의 키 생성 요청입니다.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     await this.userRepository.update(
       { id: userId },
-      { keyCount: user.keyCount + 1 },
+      { keyCount: user.keyCount + 1, keyUpdateAt: new Date() },
     );
     return { keyCount: user.keyCount };
   }
