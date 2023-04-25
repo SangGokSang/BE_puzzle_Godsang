@@ -110,19 +110,7 @@ export class PuzzleService {
     userId: number,
     puzzleId: number,
     messageId: number,
-  ): Promise<{ keyCount: number }> {
-    const message = await this.messageRepository
-      .createQueryBuilder()
-      .where({ id: messageId, puzzle: { id: puzzleId } })
-      .getOneOrFail();
-
-    if (message.isOpened) {
-      throw new CustomException(
-        ExceptionCode.MESSAGE_ALREADY_OPEN,
-        '메세지가 이미 열린 상태입니다.',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
+  ): Promise<{ keyCount: number; list: Promise<PuzzleDto[]> }> {
     const user = await this.userRepository.findOneOrFail({
       where: { id: userId },
     });
@@ -139,7 +127,7 @@ export class PuzzleService {
       await manager.update(User, userId, { keyCount });
       await manager.update(Message, messageId, { isOpened: true });
     });
-    return { keyCount };
+    return { list: this.getPuzzles(userId), keyCount };
   }
 
   async deleteMessage(
