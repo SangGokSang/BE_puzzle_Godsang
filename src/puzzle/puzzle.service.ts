@@ -110,7 +110,7 @@ export class PuzzleService {
     userId: number,
     puzzleId: number,
     messageId: number,
-  ): Promise<{ keyCount: number; list: Promise<PuzzleDto[]> }> {
+  ): Promise<{ keyCount: number; list: PuzzleDto[] }> {
     const user = await this.userRepository.findOneOrFail({
       where: { id: userId },
     });
@@ -127,7 +127,7 @@ export class PuzzleService {
       await manager.update(User, userId, { keyCount });
       await manager.update(Message, messageId, { isOpened: true });
     });
-    return { list: this.getPuzzles(userId), keyCount };
+    return { list: await this.getPuzzles(userId), keyCount };
   }
 
   async deleteMessage(

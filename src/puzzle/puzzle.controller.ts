@@ -69,7 +69,7 @@ export class PuzzleController {
     @GetUserId() userId: number,
     @Param('puzzleId', ParseIntPipe) puzzleId: number,
     @Param('messageId', ParseIntPipe) messageId: number,
-  ): Promise<{ keyCount: number }> {
+  ): Promise<{ keyCount: number; list: PuzzleDto[] }> {
     return await this.puzzleService.readMessage(userId, puzzleId, messageId);
   }
 
