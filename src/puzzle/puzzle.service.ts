@@ -103,7 +103,7 @@ export class PuzzleService {
         .save();
     });
 
-    return await this.getPuzzles(userId);
+    return await this.getPuzzles(puzzle.user.id);
   }
 
   async readMessage(
