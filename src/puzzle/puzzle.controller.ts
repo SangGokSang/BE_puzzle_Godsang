@@ -28,8 +28,8 @@ export class PuzzleController {
   async createPuzzle(
     @GetUserId() userId: number,
     @Body(ValidationPipe) puzzleCreateDto: PuzzleCreateDto,
-  ): Promise<void> {
-    await this.puzzleService.createPuzzle(userId, puzzleCreateDto);
+  ): Promise<PuzzleDto[]> {
+    return await this.puzzleService.createPuzzle(userId, puzzleCreateDto);
   }
 
   @Get()
@@ -44,7 +44,7 @@ export class PuzzleController {
   async deletePuzzles(
     @GetUserId() userId: number,
     @Param('puzzleId', ParseIntPipe) puzzleId: number,
-  ): Promise<void> {
+  ): Promise<PuzzleDto[]> {
     return await this.puzzleService.deletePuzzle(userId, puzzleId);
   }
 
@@ -55,8 +55,12 @@ export class PuzzleController {
     @Param('puzzleId', ParseIntPipe)
     puzzleId: number,
     @Body(ValidationPipe) messageCreateDto: MessageCreateDto,
-  ) {
-    await this.puzzleService.createMessage(userId, puzzleId, messageCreateDto);
+  ): Promise<PuzzleDto[]> {
+    return await this.puzzleService.createMessage(
+      userId,
+      puzzleId,
+      messageCreateDto,
+    );
   }
 
   @Patch('/:puzzleId/messages/:messageId')
@@ -65,7 +69,17 @@ export class PuzzleController {
     @GetUserId() userId: number,
     @Param('puzzleId', ParseIntPipe) puzzleId: number,
     @Param('messageId', ParseIntPipe) messageId: number,
-  ) {
-    await this.puzzleService.readMessage(userId, puzzleId, messageId);
+  ): Promise<{ keyCount: number }> {
+    return await this.puzzleService.readMessage(userId, puzzleId, messageId);
+  }
+
+  @Delete('/:puzzleId/messages/:messageId')
+  @UseGuards(JwtAuthGuard)
+  async deleteMessage(
+    @GetUserId() userId: number,
+    @Param('puzzleId', ParseIntPipe) puzzleId: number,
+    @Param('messageId', ParseIntPipe) messageId: number,
+  ): Promise<PuzzleDto[]> {
+    return await this.puzzleService.deleteMessage(userId, puzzleId, messageId);
   }
 }

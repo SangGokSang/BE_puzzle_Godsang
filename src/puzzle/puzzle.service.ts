@@ -20,14 +20,7 @@ export class PuzzleService {
     private messageRepository: Repository<Message>,
   ) {}
 
-  async createPuzzle(userId: number, puzzleCreateDto: PuzzleCreateDto) {
-    const { category, title } = puzzleCreateDto;
-    await this.puzzleRepository
-      .create({ user: { id: userId }, category, title })
-      .save();
-  }
-
-  async getPuzzles(userId: number): Promise<PuzzleDto[]> {
+  async checkExistUser(userId): Promise<void> {
     const exist = await this.userRepository.exist({
       where: { id: userId },
     });
@@ -38,6 +31,10 @@ export class PuzzleService {
         HttpStatus.BAD_REQUEST,
       );
     }
+  }
+
+  async getPuzzles(userId: number): Promise<PuzzleDto[]> {
+    await this.checkExistUser(userId);
     const puzzles = await this.puzzleRepository.find({
       where: { user: { id: userId } },
       order: { createAt: 'DESC' },
@@ -45,18 +42,30 @@ export class PuzzleService {
     return puzzles.map((puzzle) => puzzle.toDto());
   }
 
-  async deletePuzzle(userId: number, puzzleId: number): Promise<void> {
+  async createPuzzle(
+    userId: number,
+    puzzleCreateDto: PuzzleCreateDto,
+  ): Promise<PuzzleDto[]> {
+    const { category, title } = puzzleCreateDto;
+    await this.puzzleRepository
+      .create({ user: { id: userId }, category, title })
+      .save();
+    return await this.getPuzzles(userId);
+  }
+
+  async deletePuzzle(userId: number, puzzleId: number): Promise<PuzzleDto[]> {
     const puzzle = await this.puzzleRepository.findOneOrFail({
       where: { id: puzzleId, user: { id: userId } },
     });
     await puzzle.remove();
+    return await this.getPuzzles(userId);
   }
 
   async createMessage(
     userId: number | null,
     puzzleId: number,
     messageCreateDto: MessageCreateDto,
-  ) {
+  ): Promise<PuzzleDto[]> {
     const puzzle: Puzzle = await this.puzzleRepository.findOneOrFail({
       where: { id: puzzleId },
     });
@@ -93,6 +102,8 @@ export class PuzzleService {
         })
         .save();
     });
+
+    return await this.getPuzzles(userId);
   }
 
   async readMessage(
@@ -131,7 +142,19 @@ export class PuzzleService {
     return { keyCount };
   }
 
-  createDisplayOrder(messages: Message[]) {
+  async deleteMessage(
+    userId: number,
+    puzzleId: number,
+    messageId: number,
+  ): Promise<PuzzleDto[]> {
+    await this.messageRepository.delete({
+      id: messageId,
+      puzzle: { id: puzzleId, user: { id: userId } },
+    });
+    return await this.getPuzzles(userId);
+  }
+
+  private createDisplayOrder(messages: Message[]) {
     let newNum;
     const displayOrders = messages.map((message) => {
       return message.displayOrder;
