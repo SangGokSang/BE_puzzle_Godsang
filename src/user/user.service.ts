@@ -92,7 +92,7 @@ export class UserService {
     const { accessToken, refreshToken } = await this.issueToken(user);
 
     res.cookie('refresh', refreshToken, {
-      // domain: 'dearmy2023.click',
+      domain: 'dearmy2023.click',
       httpOnly: true,
       secure: true,
       maxAge: 1000 * 60 * 60 * 3, // 3 hour
@@ -126,7 +126,7 @@ export class UserService {
     const { accessToken, refreshToken } = await this.issueToken(user);
 
     res.cookie('refresh', refreshToken, {
-      // todo domain: 'dearmy2023.click',
+      domain: 'dearmy2023.click',
       httpOnly: true,
       secure: true,
       maxAge: 1000 * 60 * 60 * 3, // 3 hour
