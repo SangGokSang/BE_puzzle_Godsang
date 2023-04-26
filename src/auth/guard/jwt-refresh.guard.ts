@@ -20,6 +20,7 @@ export class JwtRefreshGuard extends AuthGuard('jwt') {
     const request = context.switchToHttp().getRequest();
     const token = request.cookies['refresh'];
     if (!token) {
+      console.log(request.cookies);
       throw new CustomException(
         ExceptionCode.INVALID_TOKEN,
         'refresh 쿠키가 비어 있습니다.',
