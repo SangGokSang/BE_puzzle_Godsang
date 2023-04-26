@@ -30,7 +30,7 @@ export class UserController {
   @Post('/refresh-token')
   @UseGuards(JwtRefreshGuard)
   async refreshToken(@Req() req, @Res() res, @GetUserId() userId: number) {
-    const { refreshToken } = req.cookies['refresh-token'];
+    const refreshToken = req.cookies['refresh'];
     return await this.userService.refreshToken(refreshToken, userId, res);
   }
 
@@ -72,6 +72,7 @@ export class UserController {
   async getUserKeyCount(@GetUserId() userId): Promise<UserKeyDto> {
     return await this.userService.getUserKeyCount(userId);
   }
+
   @Patch('/key')
   @UseGuards(JwtAuthGuard)
   async updateUserKeyCount(@GetUserId() userId): Promise<UserKeyDto> {

@@ -32,7 +32,7 @@ export class UserService {
     });
 
     if (
-      user.keyUpdateAt &&
+      user.keyUpdateAt != null &&
       (Date.now() - user.keyUpdateAt.getTime()) / 1000 < 10
     ) {
       throw new CustomException(
@@ -90,7 +90,7 @@ export class UserService {
     const { user, isSignUp } = await this.findUserOrSave(userDto);
     const { accessToken, refreshToken } = await this.issueToken(user);
 
-    res.cookie('refresh-token', refreshToken, {
+    res.cookie('refresh', refreshToken, {
       // todo domain: 'dearmy2023.click',
       httpOnly: true,
       secure: true,
@@ -124,7 +124,7 @@ export class UserService {
     }
     const { accessToken, refreshToken } = await this.issueToken(user);
 
-    res.cookie('refresh-token', refreshToken, {
+    res.cookie('refresh', refreshToken, {
       // todo domain: 'dearmy2023.click',
       httpOnly: true,
       secure: true,
@@ -179,7 +179,7 @@ export class UserService {
   }
 
   async logout(res: Response): Promise<Response> {
-    res.cookie('refresh-token', '', {
+    res.cookie('refresh', '', {
       maxAge: 0,
     });
     return res.send();
