@@ -34,6 +34,7 @@ export class UserService {
     const now = new Date();
     if (user.keyUpdateAt) {
       const diffTime = (now.getTime() - user.keyUpdateAt.getTime()) / 1000;
+      console.log(diffTime);
       if (diffTime < 10) {
         throw new CustomException(
           ExceptionCode.HASTY_KEY_UPDATE,

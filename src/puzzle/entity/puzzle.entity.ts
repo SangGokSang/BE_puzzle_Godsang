@@ -30,7 +30,7 @@ export class Puzzle extends BaseEntity {
   })
   messages: Message[];
 
-  @CreateDateColumn({ type: 'timestamptz' })
+  @CreateDateColumn({ type: 'datetime' })
   createAt: Date;
 
   toDto(): PuzzleDto {

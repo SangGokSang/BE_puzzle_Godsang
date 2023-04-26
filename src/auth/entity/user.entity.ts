@@ -29,7 +29,7 @@ export class User extends BaseEntity {
   @Column({ type: 'varchar', length: 30, default: null })
   nickname?: string;
 
-  @Column({ type: 'timestamptz', default: null })
+  @Column({ type: 'datetime', default: null })
   birthdate?: Date;
 
   @Column({ type: 'varchar', default: null })
@@ -38,18 +38,18 @@ export class User extends BaseEntity {
   @Column({ nullable: false, default: 3 })
   keyCount: number;
 
-  @Column({ type: 'timestamptz', default: null })
+  @Column({ type: 'datetime', default: null })
   keyUpdateAt: Date;
 
   @OneToMany(() => Puzzle, (puzzle) => puzzle.user, { eager: false })
   puzzles: Puzzle[];
 
-  @CreateDateColumn({ type: 'timestamptz' })
+  @CreateDateColumn({ type: 'datetime' })
   createAt: Date;
 
-  @UpdateDateColumn({ type: 'timestamptz' })
+  @UpdateDateColumn({ type: 'datetime' })
   updatedAt: Date;
 
-  @DeleteDateColumn({ type: 'timestamptz', default: null })
+  @DeleteDateColumn({ type: 'datetime', default: null })
   deleteAt: Date;
 }
