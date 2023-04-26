@@ -31,10 +31,13 @@ export class UserService {
       where: { id: userId },
     });
 
-    if ((Date.now() - user.keyUpdateAt.getTime()) / 1000 < 10) {
+    const diffTime =
+      Math.abs(new Date().getTime() - user.keyUpdateAt.getTime()) / 1000;
+
+    if (diffTime < 10) {
       throw new CustomException(
         ExceptionCode.HASTY_KEY_UPDATE,
-        '10초 미만의 키 생성 요청입니다.',
+        `10초 미만의 키 생성 요청입니다. ${diffTime}`,
         HttpStatus.BAD_REQUEST,
       );
     }
