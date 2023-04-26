@@ -31,10 +31,7 @@ export class UserService {
       where: { id: userId },
     });
 
-    if (
-      user.keyUpdateAt != null &&
-      (Date.now() - user.keyUpdateAt.getTime()) / 1000 < 10
-    ) {
+    if ((Date.now() - user.keyUpdateAt.getTime()) / 1000 < 10) {
       throw new CustomException(
         ExceptionCode.HASTY_KEY_UPDATE,
         '10초 미만의 키 생성 요청입니다.',
@@ -91,9 +88,8 @@ export class UserService {
     const { accessToken, refreshToken } = await this.issueToken(user);
 
     res.cookie('refresh', refreshToken, {
-      // todo domain: 'dearmy2023.click',
+      // domain: 'dearmy2023.click',
       httpOnly: true,
-      secure: true,
       maxAge: 1000 * 60 * 60 * 3, // 3 hour
     });
     res.json({
@@ -127,15 +123,10 @@ export class UserService {
     res.cookie('refresh', refreshToken, {
       // todo domain: 'dearmy2023.click',
       httpOnly: true,
-      secure: true,
       maxAge: 1000 * 60 * 60 * 3, // 3 hour
     });
     res.json({
       accessToken,
-      userId: user.id,
-      nickname: user.nickname,
-      birthdate: user.birthdate?.getTime(),
-      isWithdrawUser: !!user.deleteAt,
     });
     return res;
   }

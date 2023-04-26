@@ -38,7 +38,7 @@ export class User extends BaseEntity {
   @Column({ nullable: false, default: 3 })
   keyCount: number;
 
-  @Column({ type: 'timestamp', nullable: false, default: null })
+  @CreateDateColumn({ type: 'timestamp' })
   keyUpdateAt: Date;
 
   @OneToMany(() => Puzzle, (puzzle) => puzzle.user, { eager: false })
