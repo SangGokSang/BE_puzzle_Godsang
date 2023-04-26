@@ -31,6 +31,8 @@ export class UserService {
       where: { id: userId },
     });
 
+    console.log(user.keyUpdateAt);
+
     const diffTime =
       Math.abs(new Date().getTime() - user.keyUpdateAt.getTime()) / 1000;
 
