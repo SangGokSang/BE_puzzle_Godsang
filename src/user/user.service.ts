@@ -66,6 +66,7 @@ export class UserService {
     const user = await this.userRepository.findOneOrFail({
       where: { id: userId },
     });
+
     return {
       userId,
       nickname: user.nickname,
