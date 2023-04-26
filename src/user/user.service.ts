@@ -96,7 +96,6 @@ export class UserService {
     res.cookie('refresh', refreshToken, {
       domain: 'dearmy2023.click',
       httpOnly: true,
-      secure: true,
       maxAge: 1000 * 60 * 60 * 3, // 3 hour
     });
     res.json({
@@ -130,7 +129,6 @@ export class UserService {
     res.cookie('refresh', refreshToken, {
       domain: 'dearmy2023.click',
       httpOnly: true,
-      secure: true,
       maxAge: 1000 * 60 * 60 * 3, // 3 hour
     });
     res.json({
