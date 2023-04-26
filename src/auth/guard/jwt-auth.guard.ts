@@ -19,8 +19,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
 
   canActivate(context: ExecutionContext) {
     const request = context.switchToHttp().getRequest();
-    const authorization =
-      request.headers['authorization'] || request.cookies['refresh-token'];
+    const { authorization } = request.headers;
     if (!authorization) {
       throw new CustomException(
         ExceptionCode.INVALID_TOKEN,
