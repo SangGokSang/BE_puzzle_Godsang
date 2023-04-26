@@ -31,10 +31,9 @@ export class UserService {
       where: { id: userId },
     });
 
-    console.log(user.keyUpdateAt);
-
     const diffTime =
-      Math.abs(new Date().getTime() - user.keyUpdateAt.getTime()) / 1000;
+      Math.abs(new Date().getTime() - new Date(user.keyUpdateAt).getTime()) /
+      1000;
 
     if (diffTime < 10) {
       throw new CustomException(
