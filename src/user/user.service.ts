@@ -30,10 +30,10 @@ export class UserService {
     const user = await this.userRepository.findOneOrFail({
       where: { id: userId },
     });
-    const now = Date.now();
 
+    const now = new Date();
     if (user.keyUpdateAt) {
-      const diffTime = (now - user.keyUpdateAt) / 1000;
+      const diffTime = (now.getTime() - user.keyUpdateAt.getTime()) / 1000;
       if (diffTime < 10) {
         throw new CustomException(
           ExceptionCode.HASTY_KEY_UPDATE,

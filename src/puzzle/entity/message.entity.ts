@@ -36,7 +36,7 @@ export class Message extends BaseEntity {
   @Column({ nullable: false })
   isOpened: boolean;
 
-  @CreateDateColumn({ type: 'timestamp' })
+  @CreateDateColumn({ type: 'timestamptz' })
   createAt: Date;
 
   toDto(): MessageDto {
