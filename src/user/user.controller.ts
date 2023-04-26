@@ -16,6 +16,7 @@ import { GetUserId } from '../auth/decorator/get-user-id.decorator';
 import { ParseUserUpdateDtoPipe } from './pipe/parse-date.pipe';
 import { UserUpdateDto } from './dto/user-update.dto';
 import { UserKeyDto } from './dto/user-key.dto';
+import { JwtRefreshGuard } from '../auth/guard/jwt-refresh.guard';
 
 @Controller('/api/user')
 export class UserController {
@@ -27,7 +28,7 @@ export class UserController {
   }
 
   @Post('/refresh-token')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtRefreshGuard)
   async refreshToken(@Req() req, @Res() res, @GetUserId() userId: number) {
     const { refreshToken } = req.cookies['refresh-token'];
     return await this.userService.refreshToken(refreshToken, userId, res);

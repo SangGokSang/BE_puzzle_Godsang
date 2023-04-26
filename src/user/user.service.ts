@@ -27,7 +27,9 @@ export class UserService {
   }
 
   async updateUserKeyCount(userId) {
-    const user = await this.userRepository.findOneOrFail(userId);
+    const user = await this.userRepository.findOneOrFail({
+      where: { id: userId },
+    });
 
     if (
       user.keyUpdateAt &&
