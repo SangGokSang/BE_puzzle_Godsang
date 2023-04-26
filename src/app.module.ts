@@ -36,6 +36,7 @@ import { TypeORMExceptionFilter } from './exception/typeORM.exception-filter';
         charset: 'utf8mb4',
         entities: [User, Puzzle, Message],
         synchronize: true,
+        timezone: 'Asia/Seoul',
       }),
     }),
     PuzzleModule,
