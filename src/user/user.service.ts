@@ -30,23 +30,22 @@ export class UserService {
     const user = await this.userRepository.findOneOrFail({
       where: { id: userId },
     });
-    console.log(typeof user.updatedAt);
-    const diffTime =
-      Math.abs(new Date().getTime() - new Date(user.keyUpdateAt).getTime()) /
-      1000;
+    const now = Date.now();
 
-    console.log(diffTime);
-    if (diffTime < 10) {
-      throw new CustomException(
-        ExceptionCode.HASTY_KEY_UPDATE,
-        `10초 미만의 키 생성 요청입니다. ${diffTime}`,
-        HttpStatus.BAD_REQUEST,
-      );
+    if (user.keyUpdateAt) {
+      const diffTime = (now - user.keyUpdateAt) / 1000;
+      if (diffTime < 10) {
+        throw new CustomException(
+          ExceptionCode.HASTY_KEY_UPDATE,
+          `10초 미만의 키 생성 요청입니다. ${diffTime}`,
+          HttpStatus.BAD_REQUEST,
+        );
+      }
     }
 
     await this.userRepository.update(userId, {
       keyCount: user.keyCount + 1,
-      keyUpdateAt: new Date(),
+      keyUpdateAt: now,
     });
     return { keyCount: user.keyCount };
   }

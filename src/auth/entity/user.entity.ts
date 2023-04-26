@@ -38,8 +38,8 @@ export class User extends BaseEntity {
   @Column({ nullable: false, default: 3 })
   keyCount: number;
 
-  @CreateDateColumn({ type: 'timestamp' })
-  keyUpdateAt: Date;
+  @Column({ type: 'bigint', default: null })
+  keyUpdateAt: number;
 
   @OneToMany(() => Puzzle, (puzzle) => puzzle.user, { eager: false })
   puzzles: Puzzle[];
