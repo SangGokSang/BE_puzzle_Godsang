@@ -31,14 +31,13 @@ export class UserService {
       where: { id: userId },
     });
 
-    const now = new Date();
+    const now = Date.now();
     if (user.keyUpdateAt) {
-      const diffTime = (now.getTime() - user.keyUpdateAt.getTime()) / 1000;
-      console.log(diffTime);
+      const diffTime = (now - user.keyUpdateAt) / 1000;
       if (diffTime < 10) {
         throw new CustomException(
           ExceptionCode.HASTY_KEY_UPDATE,
-          `10초 미만의 키 생성 요청입니다. ${diffTime}`,
+          `10초 미만의 키 생성 요청입니다.`,
           HttpStatus.BAD_REQUEST,
         );
       }
@@ -71,7 +70,7 @@ export class UserService {
     return {
       userId,
       nickname: user.nickname,
-      birthdate: user.birthdate?.getTime(),
+      birthdate: Number(user.birthdate),
       isWithdrawUser: !!user.deleteAt,
       isSignUp: true,
     };
@@ -82,11 +81,17 @@ export class UserService {
     userUpdateDto: UserUpdateDto,
   ): Promise<{ nickname: string; birthdate: number }> {
     // userId가 존재하지 않아도 아무런 예외를 던지지 않음
-    await this.userRepository.update({ id: userId }, userUpdateDto);
+    await this.userRepository.update(
+      { id: userId },
+      {
+        nickname: userUpdateDto.nickname,
+        birthdate: userUpdateDto.birthdate.getTime(),
+      },
+    );
     const { nickname, birthdate } = await this.userRepository.findOneOrFail({
       where: { id: userId },
     });
-    return { nickname, birthdate: birthdate?.getTime() };
+    return { nickname, birthdate: Number(birthdate) };
   }
 
   async loginOrSignUp(userDto: LoginDto, res: Response): Promise<Response> {
@@ -102,7 +107,7 @@ export class UserService {
       accessToken,
       userId: user.id,
       nickname: user.nickname,
-      birthdate: user.birthdate?.getTime(),
+      birthdate: Number(user.birthdate),
       isWithdrawUser: !!user.deleteAt,
       isSignUp,
       provider: user.provider,
