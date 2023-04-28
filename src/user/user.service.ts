@@ -19,6 +19,54 @@ export class UserService {
     private jwtService: JwtService,
   ) {}
 
+  async loginOrSignUp(userDto: LoginDto, res: Response): Promise<Response> {
+    const { user, isSignUp } = await this.findUserOrSave(userDto);
+    const { accessToken, refreshToken } = await this.issueToken(user);
+
+    res.cookie('refresh', refreshToken, {
+      domain: 'dearmy2023.click',
+      httpOnly: true,
+      maxAge: 1000 * 60 * 60 * 3, // 3 hour
+    });
+    res.json({
+      accessToken,
+      userId: user.id,
+      nickname: user.nickname,
+      birthdate: Number(user.birthdate),
+      isWithdrawUser: !!user.deleteAt,
+      isSignUp,
+      provider: user.provider,
+      email: user.email,
+    });
+    return res;
+  }
+
+  private async findUserOrSave(userDto: LoginDto): Promise<{
+    user: User;
+    isSignUp: boolean;
+  }> {
+    const { provider, providerId } = userDto;
+    const existingUser = await this.userRepository.findOne({
+      where: { provider, providerId },
+      withDeleted: true,
+    });
+
+    if (existingUser) {
+      return { user: existingUser, isSignUp: false };
+    } else {
+      const user = await this.userRepository
+        .create({
+          provider: userDto.provider,
+          providerId: userDto.providerId,
+          nickname: userDto.nickname,
+          email: userDto.email,
+          birthdate: Date.now().valueOf(),
+        })
+        .save();
+      return { user, isSignUp: true };
+    }
+  }
+
   async getUserKeyCount(userId): Promise<UserKeyDto> {
     const user = await this.userRepository.findOneOrFail({
       where: { id: userId },
@@ -94,28 +142,6 @@ export class UserService {
     return { nickname, birthdate: Number(birthdate) };
   }
 
-  async loginOrSignUp(userDto: LoginDto, res: Response): Promise<Response> {
-    const { user, isSignUp } = await this.findUserOrSave(userDto);
-    const { accessToken, refreshToken } = await this.issueToken(user);
-
-    res.cookie('refresh', refreshToken, {
-      domain: 'dearmy2023.click',
-      httpOnly: true,
-      maxAge: 1000 * 60 * 60 * 3, // 3 hour
-    });
-    res.json({
-      accessToken,
-      userId: user.id,
-      nickname: user.nickname,
-      birthdate: Number(user.birthdate),
-      isWithdrawUser: !!user.deleteAt,
-      isSignUp,
-      provider: user.provider,
-      email: user.email,
-    });
-    return res;
-  }
-
   async refreshToken(
     oldRefreshToken: string,
     userId: number,
@@ -140,23 +166,6 @@ export class UserService {
       accessToken,
     });
     return res;
-  }
-
-  private async findUserOrSave(userDto: LoginDto): Promise<{
-    user: User;
-    isSignUp: boolean;
-  }> {
-    const { provider, providerId } = userDto;
-    const existingUser = await this.userRepository.findOne({
-      where: { provider, providerId },
-      withDeleted: true,
-    });
-    if (existingUser) {
-      return { user: existingUser, isSignUp: false };
-    } else {
-      const user = await this.userRepository.create(userDto).save();
-      return { user, isSignUp: true };
-    }
   }
 
   async issueToken(
