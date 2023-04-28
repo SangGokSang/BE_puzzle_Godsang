@@ -57,13 +57,7 @@ export class UserController {
 
   @Patch('/restore')
   @UseGuards(JwtAuthGuard)
-  async restoreUser(@GetUserId() userId: number): Promise<{
-    birthdate: number;
-    isWithdrawUser: boolean;
-    nickname: string;
-    userId: number;
-    isSignUp: boolean;
-  }> {
+  async restoreUser(@GetUserId() userId: number) {
     return await this.userService.restoreUser(userId);
   }
 

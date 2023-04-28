@@ -104,11 +104,13 @@ export class UserService {
   }
 
   async restoreUser(userId: number): Promise<{
+    isSignUp: boolean;
     birthdate: number;
     isWithdrawUser: boolean;
+    provider: string;
     nickname: string;
     userId: number;
-    isSignUp: boolean;
+    email: string;
   }> {
     await this.userRepository.restore(userId);
     const user = await this.userRepository.findOneOrFail({
@@ -121,6 +123,8 @@ export class UserService {
       birthdate: Number(user.birthdate),
       isWithdrawUser: !!user.deleteAt,
       isSignUp: true,
+      provider: user.provider,
+      email: user.email,
     };
   }
 
