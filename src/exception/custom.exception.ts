@@ -12,6 +12,7 @@ export enum ExceptionCode {
   MALFORMED_TOKEN = 'MALFORMED_TOKEN',
   TYPE_ORM_ERROR = 'TYPE_ORM_ERROR',
   HASTY_KEY_UPDATE = 'HASTY_KEY_UPDATE',
+  PUZZLE_FULL = 'PUZZLE_FULL',
 }
 
 export class CustomException extends HttpException {
