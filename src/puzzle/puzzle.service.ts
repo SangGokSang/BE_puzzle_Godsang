@@ -46,13 +46,13 @@ export class PuzzleService {
     userId: number,
     puzzleCreateDto: PuzzleCreateDto,
   ): Promise<PuzzleDto[]> {
-    const user = await this.userRepository.findOneOrFail({
-      where: { id: userId },
+    const puzzleCount = await this.puzzleRepository.countBy({
+      user: { id: userId },
     });
-    if (user.puzzles.length >= 10) {
+    if (puzzleCount >= 10) {
       throw new CustomException(
         ExceptionCode.PUZZLE_FULL,
-        `퍼즐이 이미 10개 이상입니다.`,
+        `퍼즐이 이미 10개 이상 입니다.`,
         HttpStatus.BAD_REQUEST,
       );
     }
