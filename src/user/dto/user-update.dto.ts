@@ -1,5 +1,4 @@
-import { IsDate, IsNotIn, Length, Matches, MaxDate } from 'class-validator';
-import { Type } from 'class-transformer';
+import { IsNotIn, Length, Matches, MaxDate } from 'class-validator';
 
 export class UserUpdateDto {
   @IsNotIn([' '])
@@ -7,8 +6,6 @@ export class UserUpdateDto {
   @Length(1, 10)
   nickname: string;
 
-  @Type(() => Date)
-  @IsDate()
-  @MaxDate(new Date())
+  @MaxDate(new Date(Date.now()))
   birthdate: Date;
 }
