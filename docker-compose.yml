@@ -5,7 +5,7 @@ services:
     image: nginx:latest
     container_name: proxy
     environment:
-      - TZ = "Asia/Seoul"
+      TZ: Asia/Seoul
     network_mode: "host"
     restart: "always"
     ports:
