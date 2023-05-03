@@ -17,7 +17,7 @@ export class CustomExceptionFilter implements ExceptionFilter {
        EXCEPTION CODE: [${exception.code}]
        MESSAGE: [${exception.message}]
        USER-AGENT: [${request.headers['user-agent']}]
-       IP: [${request.ip}]
+       IP: [${request.headers['http_x_forwarded_for']}]
        STACK: [${exception.stack}]`,
     );
 

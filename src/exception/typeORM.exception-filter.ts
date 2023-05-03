@@ -25,7 +25,7 @@ export class TypeORMExceptionFilter implements ExceptionFilter {
        EXCEPTION CODE: [${code}]
        MESSAGE: [${exception.message}]
        USER-AGENT: [${request.headers['user-agent']}]
-       IP: [${request.headers['X-Forwared-For']}]
+       IP: [${request.headers['http_x_forwarded_for']}]
        STACK: [${exception.stack}]`,
     );
 
