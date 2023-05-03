@@ -22,7 +22,7 @@ export class HealthController {
     ]);
   }
 
-  @Get('/db')
+  @Get('db')
   @HealthCheck()
   checkDB() {
     return this.health.check([() => this.db.pingCheck('database')]);
