@@ -46,20 +46,32 @@ export class PuzzleService {
     userId: number,
     puzzleCreateDto: PuzzleCreateDto,
   ): Promise<PuzzleDto[]> {
-    const puzzleCount = await this.puzzleRepository.countBy({
-      user: { id: userId },
-    });
-    if (puzzleCount >= 10) {
+    const user = await this.userRepository
+      .createQueryBuilder('user')
+      .leftJoinAndSelect(`user.puzzles`, 'puzzles')
+      .where(`user.id = :id`, { id: userId })
+      .getOneOrFail();
+
+    if (user.puzzles.length >= 10) {
       throw new CustomException(
         ExceptionCode.PUZZLE_FULL,
         `퍼즐이 이미 10개 이상 입니다.`,
         HttpStatus.BAD_REQUEST,
       );
     }
+
     const { category, title } = puzzleCreateDto;
-    await this.puzzleRepository
+    const puzzle = await this.puzzleRepository
       .create({ user: { id: userId }, category, title })
       .save();
+
+    if (user.puzzles.length === 0) {
+      await this.createMessage(null, puzzle.id, {
+        to: `${user.nickname}`,
+        content: `소중한 시간을 선물 받으셨네요! 😊 선물 받은 시간 동안 갓생 살아서 목표를 달성해 봐요!!`,
+        from: `당신의 팅커벨`,
+      });
+    }
     return await this.getPuzzles(userId);
   }
 
@@ -83,7 +95,7 @@ export class PuzzleService {
     if (puzzle.messages.length >= 9) {
       throw new CustomException(
         ExceptionCode.MESSAGE_FULL,
-        '이미 9개의 메세지가 존재합니다',
+        '이미 9개의 메세지가 존재 합니다',
         HttpStatus.BAD_REQUEST,
       );
     }

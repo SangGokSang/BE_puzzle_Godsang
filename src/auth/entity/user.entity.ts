@@ -41,7 +41,7 @@ export class User extends BaseEntity {
   @Column({ type: 'bigint', default: null })
   keyUpdateAt: number;
 
-  @OneToMany(() => Puzzle, (puzzle) => puzzle.user, { eager: false })
+  @OneToMany(() => Puzzle, (puzzle) => puzzle.user)
   puzzles: Puzzle[];
 
   @CreateDateColumn({ type: 'datetime' })
