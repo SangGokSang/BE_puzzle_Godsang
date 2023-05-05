@@ -2,6 +2,7 @@ import {
   BaseEntity,
   Column,
   CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   ManyToOne,
   PrimaryGeneratedColumn,
@@ -14,7 +15,7 @@ export class Message extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'bigint' })
+  @Column({ type: 'bigint', nullable: true })
   senderId: number;
 
   @Column({ nullable: false })
@@ -40,6 +41,9 @@ export class Message extends BaseEntity {
 
   @CreateDateColumn({ type: 'datetime' })
   createAt: Date;
+
+  @DeleteDateColumn({ type: 'datetime' })
+  deleteAt: Date;
 
   toDto(): MessageDto {
     return {

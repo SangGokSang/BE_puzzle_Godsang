@@ -2,6 +2,7 @@ import {
   BaseEntity,
   Column,
   CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   ManyToOne,
   OneToMany,
@@ -32,6 +33,9 @@ export class Puzzle extends BaseEntity {
 
   @CreateDateColumn({ type: 'datetime' })
   createAt: Date;
+
+  @DeleteDateColumn({ type: 'datetime' })
+  deleteAt: Date;
 
   toDto(): PuzzleDto {
     return {

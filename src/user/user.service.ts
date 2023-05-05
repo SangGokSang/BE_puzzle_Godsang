@@ -199,4 +199,9 @@ export class UserService {
     });
     return res.send();
   }
+
+  async userCount() {
+    const users = await this.userRepository.find();
+    return users.length;
+  }
 }

@@ -76,10 +76,10 @@ export class PuzzleService {
   }
 
   async deletePuzzle(userId: number, puzzleId: number): Promise<PuzzleDto[]> {
-    const puzzle = await this.puzzleRepository.findOneOrFail({
-      where: { id: puzzleId, user: { id: userId } },
+    await this.puzzleRepository.softDelete({
+      id: puzzleId,
+      user: { id: userId },
     });
-    await puzzle.remove();
     return await this.getPuzzles(userId);
   }
 
@@ -158,7 +158,7 @@ export class PuzzleService {
     puzzleId: number,
     messageId: number,
   ): Promise<PuzzleDto[]> {
-    await this.messageRepository.delete({
+    await this.messageRepository.softDelete({
       id: messageId,
       puzzle: { id: puzzleId, user: { id: userId } },
     });

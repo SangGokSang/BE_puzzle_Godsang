@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Param,
   Patch,
   Post,
   Req,
@@ -21,6 +22,11 @@ import { JwtRefreshGuard } from '../auth/guard/jwt-refresh.guard';
 @Controller('/api/user')
 export class UserController {
   constructor(private userService: UserService) {}
+
+  @Get()
+  async userCount(@Param() pw: string) {
+    return await this.userService.userCount();
+  }
 
   @Post('/login')
   async login(@Body(ValidationPipe) loginDto: LoginDto, @Res() res) {
