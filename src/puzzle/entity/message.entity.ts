@@ -2,7 +2,6 @@ import {
   BaseEntity,
   Column,
   CreateDateColumn,
-  DeleteDateColumn,
   Entity,
   ManyToOne,
   PrimaryGeneratedColumn,
@@ -14,6 +13,9 @@ import { MessageDto } from '../dto/message.dto';
 export class Message extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @Column({ type: 'bigint' })
+  senderId: number;
 
   @Column({ nullable: false })
   displayOrder: number;

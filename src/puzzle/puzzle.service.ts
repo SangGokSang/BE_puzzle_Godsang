@@ -116,6 +116,7 @@ export class PuzzleService {
       await manager
         .create(Message, {
           puzzle: { id: puzzleId },
+          senderId: userId,
           from: messageCreateDto.from,
           to: messageCreateDto.to,
           displayOrder,
